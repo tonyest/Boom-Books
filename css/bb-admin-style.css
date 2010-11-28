@@ -1,0 +1,296 @@
+/*
+ *	Custom stylesheet for boom-books admin bachelor pad
+ *
+ *
+ */
+/*----------MENU ELEMENTS---------*/
+li a[href~="admin.php?page=boom_books"],
+li a[href~="admin.php?page=program"],
+li a[href~="admin.php?page=reports"],
+li a[href~="admin.php?page=author"] {
+	/*	color:#21759B!important; */
+	font-family: 'Reenie Beanie','IM Fell DW Pica SC'!important;
+	font-size:1.6em!important;
+	white-space:nowrap;
+	min-width:5em!important;
+}
+
+li a[href~="admin.php?page=boom_books"]:hover{
+	text-shadow: 3px 3px 5px #000!important;
+}
+
+li a[href~="admin.php?page=program"]:hover {
+	text-shadow: 3px 3px 5px #000!important;
+}
+
+li a[href~="admin.php?page=reports"]:hover {
+	text-shadow: 3px 3px 5px #000!important;
+}
+
+
+
+/*    --------- FORM ELEMENTS ----------*/
+h1#title{
+	font-family: 'Reenie Beanie','IM Fell DW Pica SC';
+	font-weight:bold;
+	font-size:3.7em;
+	letter-spacing: 2px;
+	text-indent:75;
+	color:orange;
+	text-shadow: 3px 3px 5px #666;
+	margin:4px 4px 4px 4px;
+	padding:2px 2px 2px 2px;
+}
+div#timenow{
+	vertical-align:center;
+	font-family:verdana;
+	font-size:1.8em;
+	color:white;
+	border:2px solid white;
+	padding:3.3px;
+	float:right;
+	margin-right:200px;
+}
+.bb-admin-menu #bb-admin-form{
+	background:black;
+	color:white;
+	padding:20px;
+	clear:left;
+}
+.bb-admin-menu #bb-admin-form select, .bb-admin-menu #bb-admin-form input{
+	margin:8px 8px 8px 8px;
+}
+#bb-new-set {
+	display:inline;
+}
+#bb-new-set .ui-icon {
+float:left;
+}
+div#slider{
+	margin:0.5em 0.5em 0.2em 0.5em;
+}
+input.ui-icon{
+	clear:none;
+	display:inline;
+}
+.bb_textarea{
+	margin:1em 1em 1em 1em;
+	width:75%;
+	clear:both;
+	display:block;
+}
+
+/*--- TABLES ---*/
+/*Layout*/
+.bb-admin-menu #bb-admin-form fieldset table.bb-effort td:first-child{
+	width:60%;
+}
+.bb-admin-menu #bb-admin-form fieldset table.bb-effort{
+	border:;
+	border-style:solid;
+	border-color:white;
+	width:80%;
+
+}
+.bb-admin-menu #bb-admin-form fieldset table.bb-effort td{
+	border:;
+	border-style:solid;
+	border-color:white;
+}
+.bb-form-text{
+	width:90%;
+	height:75%;
+	margin:10px;
+}
+.bb-admin-menu #bb-admin-form table.mytable {
+	border:1px;
+	border-style:solid;
+	border-color:white;
+
+}
+.bb-admin-menu #bb-admin-form table.mytable td {
+	border:1px;
+	border-style:solid;
+	border-color:white;
+	padding:4px;
+	
+}
+
+
+
+
+
+/**********  PROGRAM SHEET  */
+.bb-program#bb_program_table{
+    border-collapse: collapse;
+	width:80%;
+	margin:1em 2em 1em 3em;
+}
+
+.bb-program#bb_program_table tr td{
+	white-space:nowrap;
+	padding:1em 1em 0.5em 1em;
+	margin:1em 1em 1em 1em;
+}
+.bb-program#bb_program_table tr.header th{
+	vertical-align:top;
+}
+.bb-program#bb_program_table tr.month-divider th{
+	font-family:'IM Fell DW Pica SC';
+	text-align:left;
+	font-size:2em;
+	padding:1em 3em 1em 2em;
+	margin:0 3em 0 0 ;
+	border:1px;
+}
+
+.bb-program#bb_program_table tr.week-divider hr{
+	border:0;
+	border-top: 1px dotted orange;
+	height: 0;
+	background: black;
+	opacity:0.1;
+}
+
+
+/* ,
+.bb-program#bb_program_table td.setting */
+/* cursor: help;  */
+
+.bb-program#bb_program_table td.discipline{
+	text-transform:capitalize;
+	font-weight:bold;
+}
+
+.bb-program#bb_program_table td.date{
+	font-size:1em;
+}
+
+.bb-program#bb_program_table tr td.set-date a:link,
+.bb-program#bb_program_table tr td.set-date a:hover,
+.bb-program#bb_program_table tr td.set-date a:visited{
+	text-decoration:none;
+	font-weight:bold;
+}
+.bb-program#bb_program_table tr.set-row:hover {
+	color:white;
+	background:hsla(0,0%,0%,.085);
+}
+.bb-program#bb_program_table td:hover {
+    cursor: pointer;
+}
+
+.bb-program#bb_program_table td.difficulty,
+.bb-program#bb_program_table td.distance,
+.bb-program#bb_program_table td.duration,
+.bb-program#bb_program_table td.setting,
+.bb-program#bb_program_table td.status {
+	font-size:1.1em;
+	text-align:center;
+}
+.bb-program#bb_program_table td.difficulty,
+.bb-program#bb_program_table td.status {
+	font-weight:bold;
+	font-size:1.13em;
+}
+.bb-program#bb_program_table td.rest-day {
+	color:hsla(0,0%,0%,.2);
+}
+
+
+/********  REPORTS SHEET   */
+.bb-reports#bb_reports_table {
+	border:;
+	border-style:solid;
+	border-color:white;
+	width:80%;
+	margin:10px 10px 10px 10px;
+}
+
+.bb-reports#bb_reports_totals tr td {
+	white-space:nowrap;
+	border:1px;
+	border-style:solid;
+	border-color:white;
+	padding:5px 10px 5px 10px;
+	margin:10px 10px 10px 10px;
+}
+
+.bb-reports#bb_reports_totals th.bb-reports-table-header {
+	text-align:left;
+}
+
+.bb-reports#bb_reports_totals th.discipline{
+	text-align:left;
+	text-transform:capitalize;
+}
+
+.bb-reports#bb_reports_totals th.table-totals{
+	text-align:left;
+	padding-left:3em;
+}
+
+
+
+
+/********  AUTHOR SHEET   */
+/* FoRM ELEMENTS  */
+.new-effort textarea {
+	width:100%;
+	min-height:8em;
+}
+.new-effort#author_form_table {
+	width:100%;
+	height:70%;
+	
+}
+
+.new-effort#author_form_table tr {
+
+	
+}
+
+.new-effort#author_form_table tr td {
+	padding:1em .5em .5em .5em;
+
+}
+
+.new-effort#author_form_table tr td.col-1 {
+		width:60%;
+
+}
+/* tabs elements*/
+div#tabs ul li span{
+	float:right;
+}
+
+table.bb-author#bb_author_table {
+	width:60%;
+	height:70%;
+	border-style:solid;
+	border-color:white;
+	margin:1em 2em 1em 3em;
+}
+table.bb-author#bb_author_table tr td {
+	text-align:center;
+}
+table.bb-author#bb_author_table tr td.discipline {
+	text-align:left;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

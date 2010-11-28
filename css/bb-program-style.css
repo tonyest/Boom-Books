@@ -1,0 +1,35 @@
+/*--- TABLES ---*/
+/*Layout*/
+.bb-admin-menu #bb-admin-form fieldset table.bb-effort td:first-child{
+	width:60%;
+}
+.bb-program#bb_program_table{
+	border:;
+	border-style:solid;
+	border-color:white;
+	width:80%;
+
+}
+.bb-admin-menu #bb-admin-form fieldset table.bb-effort td{
+	border:;
+	border-style:solid;
+	border-color:white;
+}
+.bb-form-text{
+	width:90%;
+	height:75%;
+	margin:10px;
+}
+.bb-admin-menu #bb-admin-form table.mytable {
+	border:1px;
+	border-style:solid;
+	border-color:white;
+
+}
+.bb-admin-menu #bb-admin-form table.mytable td {
+	border:1px;
+	border-style:solid;
+	border-color:white;
+	padding:4px;
+	
+}

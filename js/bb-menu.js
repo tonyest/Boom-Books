@@ -8,31 +8,18 @@ function addLoadEvent(func){
 //function bb_menu_scripts(){
 loadTime();//load clock timer
 jQuery(document).ready(function($){	
+	//GENERAL MENU FUNCTIONS
+	bb_datepicker('.bb-datepicker');
 	
-		//GENERAL MENU FUNCTIONS
-		bb_datepicker('.bb-datepicker');
-		
-		//PROGRAM FUNCTIONS
-		stylize_status('.status');
-		stylize_difficulty('.difficulty');
-		linked_row('.bb-program#bb_program_table tr.set-row');
-		
-		//AUTHOR FUNCTIONS
-		efforts('#tabs');
-		
-		$('#thisbuttoncunt').click(function(){
-			var page = $('a#linkme').attr('href');
-			var mydata =$(':input').serializeArray();
-			$.ajax({
-			   type: "POST",
-			dataType: "html",
-			   url: page,
-			   data: mydata,
-			   success: function(msg){
-			     alert( "Data Saved: " + msg );
-			   }
-			});
-		});
+	//PROGRAM FUNCTIONS
+	stylize_status('.status');
+	stylize_difficulty('.difficulty');
+	linked_row('.bb-program#bb_program_table tr.set-row');
+	
+	//AUTHOR FUNCTIONS
+	efforts('#tabs');
+	author_set_submit();
+	
 });
 //}
 //form validator
@@ -75,10 +62,14 @@ function bb_slider(elms,min,max,step,init,width){
 		slide: function( event, ui ) {
 			var $tabs = $('#tabs').tabs();
 			var index = $tabs.tabs('option', 'selected');
-			$($element.get(index-1)).val(ui.value);
-			//also change values of row results
+			var minutes = (ui.value%60), hours = Math.floor( ui.value / 60 ), seconds = 0;
+
+//			$( $element.get(index-1) ).val( hours +':'+ minutes +':'+ seconds );			
+			$( $element.get(index-1) ).val(ui.value);
+			
+			//also change values of set-row results
 			//format for meteres - kilometers
-			if('	Swimming	' ==  $( $('table#bb_author_table tr.set-row td.discipline').get(index-1) ).html() && '.distance' == elms ){
+			if('	swimming	' ==  $( $('table#bb_author_table tr.set-row td.discipline').get(index-1) ).html() && '.distance' == elms ){
 				jQuery( $('table#bb_author_table tr.set-row ').get(index) ).find(elms).html(ui.value/1000);
 			} else {
 				jQuery( $('table#bb_author_table tr.set-row ').get(index) ).find(elms).html(ui.value);
@@ -87,13 +78,14 @@ function bb_slider(elms,min,max,step,init,width){
 		}
 	}).width(width);
 	$element.change(function() {
+		slider.slider( "value", this.value);		
 		slider.slider( "value", this.value);
 		
 		//also change values of row results
 		var $tabs = $('#tabs').tabs();
 		var index = $tabs.tabs('option', 'selected');
 		//format for meteres - kilometers
-		if('	Swimming	' == $($('table#bb_author_table tr.set-row td.discipline').get(index-1)).html() && '.distance' == elms ){
+		if('	swimming	' == $($('table#bb_author_table tr.set-row td.discipline').get(index-1)).html() && '.distance' == elms ){
 			jQuery( $('table#bb_author_table tr.set-row ').get(index) ).find(elms).html(this.value/1000);
 		} else {
 			jQuery( $('table#bb_author_table tr.set-row ').get(index) ).find(elms).html(this.value);						
@@ -200,18 +192,18 @@ function efforts(elm){
 	var $tabs = $( "#tabs").tabs({
 		tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>",
 		add: function( event, ui ) {
-			var table = add_effort_editor(tab_counter,$discipline.val());
+			var table = add_effort_editor(tab_counter-1,$discipline.val());
 			$( ui.panel ).append( "<p>" + table + "</p>" );
 				switch($discipline.val()){
-				case 'Cycling' :
+				case 'cycling' :
 					bb_slider('.duration',1,300,1,0,250);//#[elms],min,max,step,init,width
 					bb_slider('.distance',1,300,1,0,250);
 				break;
-				case 'Swimming' :
+				case 'swimming' :
 					bb_slider('.duration',1,300,1,0,250);//#[elms],min,max,step,init,width
 					bb_slider('.distance',25,100*100,50,0,250);
 				break;
-				case 'Running' :
+				case 'running' :
 					bb_slider('.duration',1,4*60,1,0,250);//#[elms],min,max,step,init,width
 					bb_slider('.distance',1,50,1,0,250);
 				break;
@@ -228,9 +220,9 @@ function efforts(elm){
 		if( '' != $discipline.val()){
 			$tabs.tabs( "add", "#tabs-" + tab_counter, $discipline.val() );
 			tab_counter++;
-			$('div.bb-author#bb_update').slideUp('slow','swing');
+			$('.update').slideUp('slow','swing');
 		}else{
-			$('div.bb-author#bb_update').html('<div class="updated" align="center"><p><strong>Select a discipline before adding a new effort.</strong></p></div>');
+			bb_ajax_i18n_update('Select a discipline before adding a new effort.');
 		}
 	}
 
@@ -276,16 +268,16 @@ $lastrow = $('table#bb_author_table tr.set-row').last();
  *
  */
 function add_effort_editor(tab_counter,discipline) {
-	var dist_units = ( 'Swimming' == discipline)? 'meters' : 'kilometers';
-	var table = '<table class="bb-author new-effort" id="author_form_table"><tr><td class="bb-author new-effort col-1" >'+
-		'<select name="'+tab_counter+'setting" value="$effort=>setting" class="bb-author new-effort setting" id="setting" ><option value="">Select location...</option><option value="road">road</option><option value="gym">gym</option><option value="pool">pool</option><option value="open_water">open water</option><option value="wind_trainer">wind trainer</option></select>'+
-		'<input type="text" name="'+tab_counter+'foods" size="100" value="foods consumed" autocomplete="on" class="bb-author new-effort food" id="food" />'+
-		'</td><td class="bb-author new-effort col-2" ><strong>Time</strong><input type="text" name="'+tab_counter+'duration" autocomplete="on" value="minutes" class="bb-author new-effort duration" id="duration" /></td></tr>'+
-		'<tr><td rowspan="3" class="bb-author new-effort col-1" ><strong>Describe the session</strong><br /><textarea name="'+tab_counter+'details" class="bb-author new-effort details" id="details" ></textarea>'+
+	var dist_units = ( 'swimming' == discipline)? 'meters' : 'kilometers';
+	var table = '<input type="hidden" name="'+tab_counter+'[discipline]" value="'+discipline+'" class="bb-author new-effort discipline" id="discipline" /><table class="bb-author new-effort" id="author_form_table"><tr><td class="bb-author new-effort col-1" >'+
+		'<select name="'+tab_counter+'[setting]" value="$effort=>setting" class="bb-author new-effort setting" id="setting" ><option value="">Select location...</option><option value="road">road</option><option value="gym">gym</option><option value="pool">pool</option><option value="open_water">open water</option><option value="wind_trainer">wind trainer</option></select>'+
+		'<p><strong>Foods consumed</strong><br /><input type="text" name="'+tab_counter+'[foods]" size="90" value="" autocomplete="on" class="bb-author new-effort food" id="food" /></p>'+
+		'</td><td class="bb-author new-effort col-2" ><strong>Time</strong><input type="text" name="'+tab_counter+'[duration]" autocomplete="on" value="minutes" class="bb-author new-effort duration" id="duration" /></td></tr>'+
+		'<tr><td rowspan="3" class="bb-author new-effort col-1" ><strong>Describe the session</strong><br /><textarea name="'+tab_counter+'[details]" class="bb-author new-effort details" id="details" ></textarea>'+
 		'</td><td class="bb-author new-effort col-2"><strong>Distance</strong>'+
-		'<input type="text" name="'+tab_counter+'distance" autocomplete="on" value="'+dist_units+'" class="bb-author new-effort distance" id="distance" />'+
-		'</td></tr><tr><td class="bb-author new-effort col-2"><strong>Difficulty</strong><input type="text" name="'+tab_counter+'difficulty" autocomplete="on" value="out of 10" class="bb-author new-effort difficulty" id="difficulty" />'+
-		'</td></tr><tr><td class="bb-author new-effort col-2"><strong>Water</strong><input type="text" name="'+tab_counter+'water" autocomplete="on" value="litres" class="bb-author new-effort water" id="water" /></td></tr></table>';
+		'<input type="text" name="'+tab_counter+'[distance]" autocomplete="on" value="'+dist_units+'" class="bb-author new-effort distance" id="distance" />'+
+		'</td></tr><tr><td class="bb-author new-effort col-2"><strong>Difficulty</strong><input type="text" name="'+tab_counter+'[difficulty]" autocomplete="on" value="out of 10" class="bb-author new-effort difficulty" id="difficulty" />'+
+		'</td></tr><tr><td class="bb-author new-effort col-2"><strong>Water</strong><input type="text" name="'+tab_counter+'[water]" autocomplete="on" value="litres" class="bb-author new-effort water" id="water" /></td></tr></table>';
 	return table;
 }
 /*
@@ -351,9 +343,12 @@ function update_location (elm) {
 		}
 	}).change();
 }
-
-
-// add elements for new set
+/*
+ *
+ * 
+ *wrap a new set.....                    Non fUNCTIONAL
+ *
+ */
 function bb_newset(elms){
 	$(elms).button();
 	var wrap = elms+"-wrap";
@@ -365,5 +360,49 @@ function bb_newset(elms){
 		$('.new-effort').wrapAll('<div class="bb-effort effort" id="effort"/>');
 		$('#effort').buttonset();
 //		$("#effort+label").focus();
+	});
+}
+
+/*
+ *
+ * selects all input items from bb-menu-author and uses AJAX to submit to wordpress
+ *
+ *
+ */
+function author_set_submit(){
+	$('#author_submit_set').click(function(){
+		var wp_ajax_url = $('a#wpurl_ajax').attr('href');
+		var mydata =$(':input').serialize();
+		$.ajax({
+		   type: "POST",
+		dataType: "html",
+		   url: wp_ajax_url,
+		data:'action=bb_submit&' + mydata,
+		   success: function(msg){
+				$('div.bb-author#bb_update').html('<div class="updated" align="center"><p><strong>'+msg+'</strong></p></div>');
+				$('.updated').hide();
+				$('.updated').fadeIn('slow');
+		   }
+		});
+	});
+}
+/*
+ *
+ * internationalise a string through an AJAX to wordpress
+ *
+ *
+ */
+function bb_ajax_i18n_update(string){
+	
+	var wp_ajax_url = $('a#wpurl_ajax').attr('href');
+	var return_string = $.ajax({
+	   	type: "POST",
+		 url: wp_ajax_url,
+		data: 'action=bb_ajax_i18n_update&string=' + string,
+		success: function(i18n_string){
+			$('div.bb-author#bb_update').html('<div class="updated" align="center"><p><strong>'+i18n_string+'</strong></p></div>');
+			$('.updated').hide();
+			$('.updated').fadeIn('slow');
+		}
 	});
 }

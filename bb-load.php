@@ -2,7 +2,6 @@
 
 /*constructor for the Boom-Books page*/
 
-
 /*
  *INITIALISE SCRIPTS INTO BOOM BOOKS ADMIN/PLUGIN AREAS ONLY
  *register styles and enqueue scripts first to place in correct part of header
@@ -17,7 +16,7 @@ function bb_admin_init_scripts() {
 	//wp_register_script('jqueryUI', ("https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/jquery-ui.min.js"), 'jquery','1.8.6','');
 	wp_register_script('jquery',BB_PLUGIN_URL.'/js/jquery-1.4.2.min.js',false,'1.4.3','');
 	wp_register_script('jqueryUI',BB_PLUGIN_URL.'/js/jquery-ui-1.8.6.custom.min.js', 'jquery','1.8.6','');
-	wp_register_script('bb-scripts',BB_PLUGIN_URL.'/js/dashboard-functions.js','jqueryUI');
+	wp_register_script('bb-scripts',BB_PLUGIN_URL.'/js/bb-menu.js','jqueryUI');
 
 	wp_enqueue_style('jqdark',BB_PLUGIN_URL.'/css/ui-darkness/jquery-ui-1.8.6.custom.css',false,'1.8.6');
 	wp_enqueue_style('bb-admin-style', BB_PLUGIN_URL.'/css/bb-admin-style.css');
@@ -46,17 +45,14 @@ function bb_admin_menu() {
 	$position = '';
 
 	$page = add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url );
-		add_action('admin_print_scripts-' . $page,'bb_scripts');
+				add_action('admin_print_scripts-' . $page,'bb_scripts');
 	$page = add_submenu_page( $menu_slug, 'Program', 'Program', $capability, 'program', 'bb_admin_submenu_program');
-			add_action('admin_print_scripts-' . $page,'bb_scripts');
+				add_action('admin_print_scripts-' . $page,'bb_scripts');
 	$page = add_submenu_page( $menu_slug, 'Reports', 'Reports', $capability, 'reports', 'bb_admin_submenu_report'); 
-			add_action('admin_print_scripts-' . $page,'bb_scripts');
+				add_action('admin_print_scripts-' . $page,'bb_scripts');
 	$page = add_submenu_page( $menu_slug, 'Author', 'Author', $capability, 'author', 'bb_admin_submenu_author'); 
-			add_action('admin_print_scripts-' . $page,'bb_scripts');
+				add_action('admin_print_scripts-' . $page,'bb_scripts');
 }
-
-
-
 /*
  *BOOM BOOKS admin menu content 
  *read it and weep!
@@ -77,9 +73,6 @@ include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-program.php');
 function bb_admin_submenu_report(){
 include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-report.php');
 }
-
-
-
 
 /*
  *BOOM BOOKS custom type
@@ -137,21 +130,5 @@ $labels = array(
  ); 
  register_post_type('boom_books',$args);
 }
-//create boombook home page
 
-
-/*
- *BOOM BOOKS custom type template
- *load a custom template type for boom books custom type
- *
- *				DISABLED
- */
-//add_filter( "single_template", "get_custom_post_type_template" ) ;
-//add_action('template_redirect', 'add_bb_single'); // boom book custom template
-function get_custom_post_type_template() {
-     global $post;
-     if ($post->post_type == 'boom_book') {
-          return WP_CONTENT_DIR . '/plugins/boom-books/bb-single.php';
-     }
-}
 ?>

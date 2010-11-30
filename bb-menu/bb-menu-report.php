@@ -1,5 +1,3 @@
-
-
 <!--returns results of queries-->
 <!--userselect:reporting dates [from,to] . default this month?-->
 	<!--page1:all sets done in period-->
@@ -16,7 +14,7 @@
  *
 */
 	$today=current_time_fixed( 'timestamp',0);//normal
-	$today= strtotime('2010-11-16 00:00:00');//testing
+//	$today= strtotime('2010-11-16 00:00:00');//testing
 	
 /*
  *simulate today's date and range for simplicity in testing
@@ -44,8 +42,8 @@ error_log(date('Y-m-d h:m:s',strtotime($from)));
 	SEC_TO_TIME ( SUM(TIME_TO_SEC(duration) ) ) AS duration, CAST(SUM(distance) AS decimal(6,2)) AS distance 
 	FROM wp_bb_sets JOIN wp_bb_efforts 
 		ON wp_bb_sets.setID=wp_bb_efforts.setID 
-	WHERE category='program' ".
-	"AND start > '".date('Y-m-d',strtotime($from))."' AND start < '".date('Y-m-d',strtotime($to)).
+	WHERE category='myset' ".
+	"AND start >= '".date('Y-m-d',strtotime($from))."' AND start <= '".date('Y-m-d',strtotime($to)).
 	"' GROUP BY discipline");
 
 	echo $current_user->user_firstname.' '.$current_user->user_lastname. '<br />',

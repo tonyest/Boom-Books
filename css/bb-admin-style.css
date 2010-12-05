@@ -5,9 +5,10 @@
  */
 /*----------MENU ELEMENTS---------*/
 li a[href~="admin.php?page=boom_books"],
-li a[href~="admin.php?page=program"],
-li a[href~="admin.php?page=reports"],
-li a[href~="admin.php?page=author"] {
+li a[href~="admin.php?page=bb_reports"],
+li a[href~="admin.php?page=bb_submit"],
+li a[href~="admin.php?page=bb_author"],
+li a[href~="admin.php?page=dailys"] {
 	/*	color:#21759B!important; */
 	font-family: 'Reenie Beanie','IM Fell DW Pica SC'!important;
 	font-size:1.6em!important;
@@ -172,11 +173,11 @@ input.ui-icon{
 	text-decoration:none;
 	font-weight:bold;
 }
-.bb-program#bb_program_table tr.set-row:hover {
+.bb-program#bb_program_table tr.set-row-incomplete:hover {
 	color:white;
-	background:hsla(0,0%,0%,.085);
+	background:hsla(110,70%,40%,.85);
 }
-.bb-program#bb_program_table td:hover {
+.bb-program#bb_program_table tr.set-row-incomplete td:hover {
     cursor: pointer;
 }
 
@@ -203,15 +204,15 @@ input.ui-icon{
 	border:;
 	border-style:solid;
 	border-color:white;
-	width:80%;
+	width:100%;
 	margin:10px 10px 10px 10px;
 }
 
 .bb-reports#bb_reports_totals tr td {
 	white-space:nowrap;
-	border:1px;
-	border-style:solid;
-	border-color:white;
+	border:;
+	border-style:;
+	border-color:;
 	padding:5px 10px 5px 10px;
 	margin:10px 10px 10px 10px;
 }
@@ -229,33 +230,67 @@ input.ui-icon{
 	text-align:left;
 	padding-left:3em;
 }
+/* - - - - REPORTS TABLE - - - -*/
 
 
+table.bb-reports#bb_report_disciplines {
+	width:95%;
+	height:70%;
+}
+table.bb-reports#bb_report_disciplines tr th {
+	font-size:0.8em;
+}
+table.bb-reports#bb_report_disciplines tr td {
+	text-align:center;
+	white-space:nowrap;
+	padding:1em 1em 1em 0.5em;
+}
+table.bb-reports#bb_report_disciplines tr td.date {
+	text-align:left;
+	min-width:12em;
+	white-space:nowrap;
+}
+table.bb-reports#bb_report_disciplines tr td.details {
+	text-align:justify;
+	white-space:normal;
+	min-width:40%;
+}
+table.bb-reports#bb_report_disciplines tr td.details a {
+	cursor: pointer;
+}
+table.bb-reports#bb_report_disciplines tr td.food {
+	padding: 0 1em 0 1em;
+	text-align:left;
+	min-width:8em;
+	white-space:normal;
+}
+table.bb-reports#bb_report_disciplines tr td.discipline {
+	text-align:left;
+}
 
-
-/********  AUTHOR SHEET   */
+/********  submit SHEET   */
 /* FoRM ELEMENTS  */
 .new-effort textarea {
 	width:100%;
 	min-height:8em;
 }
-.new-effort#author_form_table {
+.new-effort#submit_form_table {
 	width:100%;
 	height:70%;
 	
 }
 
-.new-effort#author_form_table tr {
+.new-effort#submit_form_table tr {
 
 	
 }
 
-.new-effort#author_form_table tr td {
+.new-effort#submit_form_table tr td {
 	padding:1em .5em .5em .5em;
 
 }
 
-.new-effort#author_form_table tr td.col-1 {
+.new-effort#submit_form_table tr td.col-1 {
 		width:60%;
 
 }
@@ -264,33 +299,70 @@ div#tabs ul li span{
 	float:right;
 }
 
-table.bb-author#bb_author_table {
+table.bb-submit#bb_submit_table {
 	width:60%;
 	height:70%;
 	border-style:solid;
 	border-color:white;
 	margin:1em 2em 1em 3em;
 }
-table.bb-author#bb_author_table tr td {
+table.bb-submit#bb_submit_table tr td {
 	text-align:center;
 }
-table.bb-author#bb_author_table tr td.discipline {
+table.bb-submit#bb_submit_table tr td.discipline {
 	text-align:left;
 }
 
 
+/* - - - - TIME UI - - - - - */
+.duration {
+	width:2.5em;
+	margin:1em .33em 1em .33em;
+}
 
 
+/* - - - - - IMAGE MAP - - - - */
+map area:hover {
+	cursor: pointer;	
+}
 
+div.map {
+	position:absolute;
+	top:0px;
+	right:0px;
+	float:right;
+}
 
+/* - - - - - - Dailys - - - -- */
+textarea.consumed {
+	min-width:35em;
+}
+table.bb-dailys{
+	width:35%;
+}
+table.dailys tr td *{
+	width:35%;
+	float:left;
+}
+table.stretches tr td.input {
+	width:49%;
+}
+table.stretches tr td.input ul.list * {
+	
+}
+li.stretch-link {
+	position:absolute;
+	bottom:0px;
+}
 
-
-
-
-
-
-
-
-
-
+table.container{
+	width:70%;
+	height:500px;
+}
+table.container tr td {
+		height:100%;
+}
+.bb-dailys button {
+	margin: 2em 2em 2em 2em;
+}
 

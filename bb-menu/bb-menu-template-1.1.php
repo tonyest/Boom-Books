@@ -6,7 +6,7 @@
 <?PHP
 $program_set = $_GET['setID'];
 
-error_log( 'variable contains = ' . print_r( get_program_set($program_set), true ) );
+//error_log( 'variable contains = ' . print_r( get_program_set($program_set), true ) );
 $warmup_effort = '';
 /* currently returning per effort
 	[setID] => 3
@@ -110,9 +110,9 @@ if($_POST['log']=='submit'){
 		$duration = sec_to_time($_POST['duration']*60);
 		$distance = $_POST['distance'];
 		$details = $_POST['details'];
-bb_insert_set($date,$category);
+//bb_insert_set($date,$category);
 $setID = $wpdb->insert_id;
-bb_insert_effort($setID,$discipline,$setting,$difficulty,$duration,$distance,$details);
+//bb_insert_effort($setID,$discipline,$setting,$difficulty,$duration,$distance,$details);
 // $wpdb->print_error();
 
 }
@@ -159,150 +159,19 @@ echo 'Date: <input name="date" type="text" class="bb-datepicker" id="datepicker"
 	</div>
 	<h3><a href="#">Section 2 - Sets</a></h3>
 	<div>
-		<select id="">
-				<option value="">Select one...</option>
-				<option value="Cycling">Cycling</option>
-				<option value="Swimming">Swimming</option>
-				<option value="Running">Running</option>
-				<option value="Resistance">Resistance</option>
-			</select>
-			<button id="select">Add new effort</button>
 
-
-		<input type="button" class="bb-effort add-effort" id="new-effort" value="Add new Effort"/>
-		
-		<span class="ui-icon ui-icon-plusthick" id="bb-new-set"></span>
-		<h3>Update Effort</h3>
-		<!--SEXY BIG RADIO BUTTONS FOR TYPE
-		Dont forget program matching
-		 -->
-		<fieldset><table class="bb-effort" id="bb-effort-meta">			
-<tr><td><strong>Location</strong><br/>   
-	<select name="category" tabindex='' value"road">
-			<option value="road">road</option>
-			<option value="gym">gym</option>
-			<option value="pool">pool</option>
-			<option value="open_water">open water</option>
-			<option value="wind_trainer">wind trainer</option>
-	</select>
-</td>
-<td>
-	<strong id="bb-duration">Time</strong><input type="text" name="duration" id="bb_duration" tabindex="" autocomplete"on" value="minutes" size="4">
-</td></tr>
-
-<tr>
-<td rowspan="2">
-		<strong>Describe the session</strong><textarea class="bb-form-text" name="details" id="description" rows="3" cols="10" tabindex="5" ></textarea>
-</td><td>
-	<strong id="bb-distance">Distance</strong><input type="text" name="distance" id="bb_distance" tabindex="" autocomplete"on" value="Kms"  size="4">
-</td></tr>
-
-<tr>
-<td>
-	<strong id="bb-water">Difficulty</strong><input type="text" name="difficulty" id="bb_water" tabindex="" autocomplete"on" value="difficulty" size="4">
-	</td></tr>
-</table></fieldset>	
 
 	</div>
 	<h3><a href="#">Section 3 </a></h3>
 	<div>
 
-		<div class="demo"><!--bb-program daterange" id="program_daterange">-->
-
-			<div id="dialog" title="Tab data">
-				<form>
-					<fieldset class="ui-helper-reset">
-						<table class="bb-author new-effort" id="author_form_table">
-							<tr>
-								<td class="bb-author new-effort col-1" >
-									<select  name="discipline" tabindex='' class="bb-author new-effort" id="discipline" >
-										<option value="">Select Discipline...</option>
-										<option value="Cycling">Cycling</option>
-										<option value="Swimming">Swimming</option>
-										<option value="Running">Running</option>
-										<option value="Resistance">Resistance</option>
-									</select>
-									<select name="setting" tabindex='' value="$effort=>setting" class="bb-author new-effort" id="setting" >
-										<option value="">Select location...</option>
-										<option value="road">road</option>
-										<option value="gym">gym</option>
-										<option value="pool">pool</option>
-										<option value="open_water">open water</option>
-										<option value="wind_trainer">wind trainer</option>
-									</select>
-								</td>
-								<td class="bb-author new-effort col-2" >
-									<strong>Time</strong>
-									<input type="text" name="duration" autocomplete"on" class="bb-author new-effort" value="minutes" id="duration" />
-								</td>
-							</tr>
-							<tr>
-								<td rowspan="2" class="bb-author new-effort col-1" >
-									<strong>Describe the session</strong><br />
-									<textarea name="details" class="bb-author new-effort" id="details" ></textarea>
-								</td>
-								<td class="bb-author new-effort col-2">
-									<strong>Distance</strong>
-									<input type="text" name="distance" autocomplete"on" value="kilometers" class="bb-author new-effort" id="distance" />
-								</td>
-								</tr>
-							<tr>
-								<td class="bb-author new-effort col-2">
-									<strong>Difficulty</strong>
-									<input type="text" name="difficulty" autocomplete"on" value="out of 10" class="bb-author new-effort" id="difficulty"/>
-								</td>
-							</tr>
-						</table>
-					</fieldset>
-				</form>
-			</div>
-
-			<button id="add_tab"> Add Effort </button>
-			<div id="tabs">
-				<ul>
-					<li><span class="ui-icon ui-icon-note"></span><a href="#tabs-1">Current Set</a></li>
-				</ul>
-				<div id="tabs-1">
-					<p>
-						<?PHP echo 'Date: <input name="to" type="text" class="bb-datepicker" id="to" size="30" value="'.date('l d-M-Y',$today);?>">
-						<table class="bb-author" id="bb_author_table">
-							<tr class="bb-author header">
-							 <th> </th> <th>Difficulty<br /><font size="1"> 0-10 </th> <th>Distance<br /><font size="1">km</font> </th> <th>Duration<br /><font size="1"> h:m:s </font> </th> <th>Location</th>
-							</tr>
-							<tr class="bb-author set-row">
-								<td class="bb-author discipline">	cycling	</td>
-								<td class="bb-author difficulty">	3	</td>
-								<td class="bb-author distance">		34	</td>
-								<td class="bb-author duration">		11:11:11	</td>
-								<td class="bb-author setting">		road	</td>
-							</tr>
-							<tr class="bb-author set-row">
-								<td class="bb-author discipline">	swimming	</td>
-								<td class="bb-author difficulty">	2	</td>
-								<td class="bb-author distance">		1.5	</td>
-								<td class="bb-author duration">		11:11:11	</td>
-								<td class="bb-author setting">		pool	</td>
-							</tr>
-							<tr class="bb-author set-row">
-								<td class="bb-author discipline">	running	</td>
-								<td class="bb-author difficulty">	8	</td>
-								<td class="bb-author distance">		2	</td>
-								<td class="bb-author duration">		11:11:11	</td>
-								<td class="bb-author setting">		track	</td>
-							</tr>
-						</table>
-					</p>
-				</div>
-			</div>
-
-		</div><!-- End demo -->
 	
 	</div>
 	<h3><a href="#">Section 4 - Stretching</a></h3>
 	<div>
-	<h3>Stretching</h3>
+
+
 	</div>
-	
 </div><!--accordion-->
 </div><!--bb-contents-->
 

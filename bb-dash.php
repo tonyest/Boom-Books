@@ -28,22 +28,5 @@ function add_bb_dashboard_widget() {
 	wp_add_dashboard_widget('add_bb_dashboard_widget', 'Quick-Boom!', 'bb_dash_widget');
 } 
 	function bb_dash_widget() {include(BB_PLUGIN_DIR.'/bb-dash/bb-dash-widget.php');}
-/*
- * CUSTOM FUNCTION FOR CURRENT TIME
- *	 	better format etc
- *
- *
- */	
-function current_time_fixed( $type, $gmt = 0 ) {
-		$t =  ( $gmt ) ? gmdate( 'Y-m-d H:i:s' ) : gmdate( 'Y-m-d H:i:s', ( time() + ( get_option( 'gmt_offset' ) * 3600 ) ) );
-		switch ( $type ) {
-			case 'mysql':
-				return $t;
-				break;
-			case 'timestamp':
-				return strtotime($t);
-				break;
-		}
-	}
 
 ?>

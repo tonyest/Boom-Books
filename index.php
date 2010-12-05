@@ -19,7 +19,7 @@ register_activation_hook(__FILE__,'bb_dbinstall');
 //register_deactivation_hook(__FILE__,'bb_cleanup');
 include_once(BB_PLUGIN_DIR.'/includes/functions.php');
 include_once(BB_PLUGIN_DIR.'/bb-load.php');
-include_once(BB_PLUGIN_DIR.'/bb-dash.php');
+include_once(BB_PLUGIN_DIR.'/bb-templatetags.php');
 
 /*
  * Table constructor for Boom Books tables
@@ -42,7 +42,6 @@ function bb_dbinstall () {
 			start datetime NOT NULL,
 			category tinytext NOT NULL,			
 			status tinytext NOT NULL,
-			description text NOT NULL,
 			parent bigint(20) UNSIGNED,
 			PRIMARY KEY  (setID),
 			FOREIGN KEY (userID) REFERENCES wp_users(ID)
@@ -51,6 +50,7 @@ function bb_dbinstall () {
       dbDelta($sql);
    }
 	/* Boom Books 'bb_efforts' table constructor */
+
 	$table_name = $wpdb->prefix . "bb_efforts";
 	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
 
@@ -62,13 +62,17 @@ function bb_dbinstall () {
 			difficulty tinyint(2) UNSIGNED DEFAULT '0' NOT NULL,
 			duration time NOT NULL,
 			distance float(6,2) UNSIGNED DEFAULT '0' NOT NULL,			
-			details text NOT NULL,		
+			details text NOT NULL,
+			max_hr int UNSIGNED,
+			avg_hr int UNSIGNED,
+			water float(4,2) UNSIGNED DEFAULT '0' NOT NULL,
 			PRIMARY KEY  (effortID,setID),
 			FOREIGN KEY (setID) REFERENCES wp_bb_sets(setID)
 		);";
       dbDelta($sql);
    }
 	/* Boom Books 'bb_stretches' table constructor */
+
 	$table_name = $wpdb->prefix . "bb_stretches";
 	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
 
@@ -83,6 +87,7 @@ function bb_dbinstall () {
       dbDelta($sql);
    }
 	/* Boom Books 'bb_daily' table constructor */
+
 	$table_name = $wpdb->prefix . "bb_dailys";
 	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
 
@@ -99,12 +104,14 @@ function bb_dbinstall () {
       dbDelta($sql);
    }
 	/* Boom Books 'bb_journal' table constructor */
+
 	$table_name = $wpdb->prefix . "bb_journals";
 	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
 
 		$sql = "CREATE TABLE " . $table_name . " (
 			journalID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			setID bigint(20) UNSIGNED,
+			effortID biging(20) UNSIGNED,
 			dailyID bigint(20) UNSIGNED NOT NULL,
 			meal tinytext NOT NULL,
 			time time NOT NULL,

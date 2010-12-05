@@ -16,16 +16,25 @@ function bb_admin_init_scripts() {
 	//wp_register_script('jqueryUI', ("https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/jquery-ui.min.js"), 'jquery','1.8.6','');
 	wp_register_script('jquery',BB_PLUGIN_URL.'/js/jquery-1.4.2.min.js',false,'1.4.3','');
 	wp_register_script('jqueryUI',BB_PLUGIN_URL.'/js/jquery-ui-1.8.6.custom.min.js', 'jquery','1.8.6','');
-	wp_register_script('bb-scripts',BB_PLUGIN_URL.'/js/bb-menu.js','jqueryUI');
+	wp_register_script('bb-admin',BB_PLUGIN_URL.'/js/bb-admin.js','jqueryUI');
+	wp_register_script('bb-admin-submit',BB_PLUGIN_URL.'/js/bb-admin-submit.js','jqueryUI');
+	wp_register_script('jqueryUI-spinner',BB_PLUGIN_URL.'/js/ui.spinner.js','jqueryUI');
+	wp_register_script('jqueryUI-spinner-min',BB_PLUGIN_URL.'/js/ui.spinner.min.js','jqueryUI');
 
-	wp_enqueue_style('jqdark',BB_PLUGIN_URL.'/css/ui-darkness/jquery-ui-1.8.6.custom.css',false,'1.8.6');
+//	wp_enqueue_style('jqdark',BB_PLUGIN_URL.'/css/ui-darkness/jquery-ui-1.8.6.custom.css',false,'1.8.6');
+	wp_enqueue_style('jq_eggplant',BB_PLUGIN_URL.'/css/custom-theme/jquery-ui-1.8.6.custom.css',false,'1.8.6');
 	wp_enqueue_style('bb-admin-style', BB_PLUGIN_URL.'/css/bb-admin-style.css');
 	wp_enqueue_style('google-fonts','http://fonts.googleapis.com/css?family=Reenie+Beanie|IM+Fell+DW+Pica+SC&subset=latin');
 }
-function bb_scripts() {
+function bb_admin_scripts() {
 	wp_enqueue_script('jquery');
 	wp_enqueue_script('jqueryUI');
-	wp_enqueue_script( 'bb-scripts');
+	wp_enqueue_script('jqueryUI-spinner');
+	wp_enqueue_script('jqueryUI-spinner-min');
+	wp_enqueue_script( 'bb-admin');
+}
+function bb_submit_scripts() {
+		wp_enqueue_script( 'bb-admin-submit');
 }
 /*
  *BOOM BOOKS ADMIN MENU CONSTRUCTOR	
@@ -38,20 +47,28 @@ function bb_admin_menu() {
 	/* Register our plugin page */
 	$page_title = __( 'Boom Books', 'boom_books' );
 	$menu_title = __( 'Boom Books', 'boom_books' );
-	$capability = 10;
+	$capability = 'edit_posts';
 	$menu_slug = 'boom_books';
 	$function = 'bb_admin_menu_boom_books';
 	$icon_url = '/wp_BT/favicon.ico';
 	$position = '';
 
-	$page = add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url );
-				add_action('admin_print_scripts-' . $page,'bb_scripts');
-	$page = add_submenu_page( $menu_slug, 'Program', 'Program', $capability, 'program', 'bb_admin_submenu_program');
-				add_action('admin_print_scripts-' . $page,'bb_scripts');
-	$page = add_submenu_page( $menu_slug, 'Reports', 'Reports', $capability, 'reports', 'bb_admin_submenu_report'); 
-				add_action('admin_print_scripts-' . $page,'bb_scripts');
-	$page = add_submenu_page( $menu_slug, 'Author', 'Author', $capability, 'author', 'bb_admin_submenu_author'); 
-				add_action('admin_print_scripts-' . $page,'bb_scripts');
+	$page = add_menu_page( $page_title , $menu_title , $capability , $menu_slug , $function , $icon_url );
+				add_action( 'admin_print_scripts-' . $page , 'bb_admin_scripts' );
+				
+	$page = add_submenu_page( $menu_slug, __( 'Reports', 'boom_books' ) , __( 'Reports', 'boom_books' ) , $capability , 'bb_reports' , 'bb_admin_submenu_report' ); 
+				add_action( 'admin_print_scripts-' . $page, 'bb_admin_scripts' );
+				
+	$page = add_submenu_page( $menu_slug , __( 'Submit', 'boom_books' ) , __( 'Submit', 'boom_books' ) , $capability , 'bb_submit' , 'bb_admin_submenu_submit' ); 
+				add_action( 'admin_print_scripts-' . $page , 'bb_admin_scripts' );
+				add_action( 'admin_print_scripts-' . $page , 'bb_submit_scripts' );	
+								
+	$page = add_submenu_page( $menu_slug , __( 'Program Author', 'boom_books' ) , __( 'Program Author', 'boom_books' ) , 'edit_others_posts' , 'bb_author' , 'bb_admin_submenu_author' );
+				add_action( 'admin_print_scripts-' . $page , 'bb_admin_scripts' );
+				add_action( 'admin_print_scripts-' . $page , 'bb_submit_scripts' );	
+							
+	$page = add_submenu_page( $menu_slug, __( 'Dailys', 'boom_books' ), __( 'Dailys', 'boom_books' ), $capability, 'dailys', 'bb_admin_submenu_dailys'); 
+				add_action('admin_print_scripts-' . $page,'bb_admin_scripts');
 }
 /*
  *BOOM BOOKS admin menu content 
@@ -61,19 +78,24 @@ function bb_admin_menu() {
  */
 function bb_admin_menu_boom_books() {
 /* Output our admin page */
-include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-template-1.1.php');
+	include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-program.php');
 }
 function bb_admin_submenu_author() {
-/* Output our admin page */
-include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-author.php');
+	include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-author.php');
 }
-function bb_admin_submenu_program(){
-include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-program.php');
+function bb_admin_submenu_submit(){
+	include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-submit.php');
 }
 function bb_admin_submenu_report(){
-include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-report.php');
+	include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-report.php');
 }
-
+function bb_admin_playground(){
+	include(BB_PLUGIN_DIR.'/bb-menu/bb-playground.php');
+}
+function bb_admin_submenu_dailys(){
+//	include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-template-1.1.php');
+	include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-dailys.php');
+}
 /*
  *BOOM BOOKS custom type
  *install the first boombooks custom page
@@ -130,5 +152,26 @@ $labels = array(
  ); 
  register_post_type('boom_books',$args);
 }
+
+function bb_load_db(){
+	global $wpdb;
+	$table_prefix = $wpdb->prefix;
+	if (!isset($wpdb->bb_sets)) {
+		$wpdb->bb_sets = $table_prefix . 'bb_sets';
+	}
+	if (!isset($wpdb->bb_efforts)) {
+		$wpdb->bb_efforts = $table_prefix . 'bb_efforts';
+	}
+	if (!isset($wpdb->bb_stretches)) {
+		$wpdb->bb_stretches = $table_prefix . 'bb_stretches';
+	}
+	if (!isset($wpdb->bb_journals)) {
+		$wpdb->bb_journals = $table_prefix . 'bb_journals';
+	}
+	if (!isset($wpdb->bb_dailys)) {
+		$wpdb->bb_dailys = $table_prefix . 'bb_dailys';
+	}
+}
+add_action( 'admin_menu', 'bb_load_db' );
 
 ?>

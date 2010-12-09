@@ -16,19 +16,13 @@ li a[href~="admin.php?page=dailys"] {
 	min-width:5em!important;
 }
 
-li a[href~="admin.php?page=boom_books"]:hover{
+li a[href~="admin.php?page=boom_books"]:hover,
+li a[href~="admin.php?page=bb_program"]:hover,
+li a[href~="admin.php?page=bb_reports"]:hover,
+li a[href~="admin.php?page=dailys"]:hover,
+li a[href~="admin.php?page=bb_submit"]:hover {
 	text-shadow: 3px 3px 5px #000!important;
 }
-
-li a[href~="admin.php?page=program"]:hover {
-	text-shadow: 3px 3px 5px #000!important;
-}
-
-li a[href~="admin.php?page=reports"]:hover {
-	text-shadow: 3px 3px 5px #000!important;
-}
-
-
 
 /*    --------- FORM ELEMENTS ----------*/
 h1#title{
@@ -42,27 +36,12 @@ h1#title{
 	margin:4px 4px 4px 4px;
 	padding:2px 2px 2px 2px;
 }
-div#timenow{
-	vertical-align:center;
-	font-family:verdana;
-	font-size:1.8em;
-	color:white;
-	border:2px solid white;
-	padding:3.3px;
-	float:right;
-	margin-right:200px;
-}
+
 .bb-admin-menu #bb-admin-form{
 	background:black;
 	color:white;
 	padding:20px;
 	clear:left;
-}
-.bb-admin-menu #bb-admin-form select, .bb-admin-menu #bb-admin-form input{
-	margin:8px 8px 8px 8px;
-}
-#bb-new-set {
-	display:inline;
 }
 #bb-new-set .ui-icon {
 float:left;
@@ -74,58 +53,12 @@ input.ui-icon{
 	clear:none;
 	display:inline;
 }
-.bb_textarea{
-	margin:1em 1em 1em 1em;
-	width:75%;
-	clear:both;
-	display:block;
+.bb-main {
+	min-width:900px;
 }
-
-/*--- TABLES ---*/
-/*Layout*/
-.bb-admin-menu #bb-admin-form fieldset table.bb-effort td:first-child{
-	width:60%;
-}
-.bb-admin-menu #bb-admin-form fieldset table.bb-effort{
-	border:;
-	border-style:solid;
-	border-color:white;
-	width:80%;
-
-}
-.bb-admin-menu #bb-admin-form fieldset table.bb-effort td{
-	border:;
-	border-style:solid;
-	border-color:white;
-}
-.bb-form-text{
-	width:90%;
-	height:75%;
-	margin:10px;
-}
-.bb-admin-menu #bb-admin-form table.mytable {
-	border:1px;
-	border-style:solid;
-	border-color:white;
-
-}
-.bb-admin-menu #bb-admin-form table.mytable td {
-	border:1px;
-	border-style:solid;
-	border-color:white;
-	padding:4px;
-	
-}
-
-
-
-
-
 /**********  PROGRAM SHEET  */
 .bb-program#bb_program_table{
     border-collapse: collapse;
-	width:80%;
-	margin:1em 2em 1em 3em;
 }
 
 .bb-program#bb_program_table tr td{
@@ -152,24 +85,15 @@ input.ui-icon{
 	background: black;
 	opacity:0.1;
 }
-
-
-/* ,
-.bb-program#bb_program_table td.setting */
-/* cursor: help;  */
-
 .bb-program#bb_program_table td.discipline{
 	text-transform:capitalize;
 	font-weight:bold;
 }
-
-.bb-program#bb_program_table td.date{
-	font-size:1em;
-}
-
+.bb-program#bb_program_table td.difficulty,
+.bb-program#bb_program_table td.status,
 .bb-program#bb_program_table tr td.set-date a:link,
 .bb-program#bb_program_table tr td.set-date a:hover,
-.bb-program#bb_program_table tr td.set-date a:visited{
+.bb-program#bb_program_table tr td.set-date a:visited {
 	text-decoration:none;
 	font-weight:bold;
 }
@@ -180,7 +104,6 @@ input.ui-icon{
 .bb-program#bb_program_table tr.set-row-incomplete td:hover {
     cursor: pointer;
 }
-
 .bb-program#bb_program_table td.difficulty,
 .bb-program#bb_program_table td.distance,
 .bb-program#bb_program_table td.duration,
@@ -188,11 +111,6 @@ input.ui-icon{
 .bb-program#bb_program_table td.status {
 	font-size:1.1em;
 	text-align:center;
-}
-.bb-program#bb_program_table td.difficulty,
-.bb-program#bb_program_table td.status {
-	font-weight:bold;
-	font-size:1.13em;
 }
 .bb-program#bb_program_table td.rest-day {
 	color:hsla(0,0%,0%,.2);
@@ -207,16 +125,31 @@ input.ui-icon{
 	width:100%;
 	margin:10px 10px 10px 10px;
 }
-
-.bb-reports#bb_reports_totals tr td {
+.bb-reports#bb_reports_totals {
 	white-space:nowrap;
-	border:;
-	border-style:;
-	border-color:;
+	min-width:60%;
+}
+table.bb-reports#bb_reports_totals tr.sub-header-row *{
+	padding: 1em 1em 2em 1em;
+}
+.bb-reports#bb_reports_totals th {
+	white-space:nowrap;
+	width:30%;
+}
+.bb-reports#bb_reports_totals tr td {
+	text-align:center;
+/*	white-space:nowrap;
+border:2px;
+border-style:solid;
+border-color:white;*/
 	padding:5px 10px 5px 10px;
 	margin:10px 10px 10px 10px;
 }
 
+div.pc_duration,
+div.pc_distance {
+	color:blue;
+}
 .bb-reports#bb_reports_totals th.bb-reports-table-header {
 	text-align:left;
 }
@@ -242,6 +175,7 @@ table.bb-reports#bb_report_disciplines tr th {
 }
 table.bb-reports#bb_report_disciplines tr td {
 	text-align:center;
+	vertical-align:text-top;
 	white-space:nowrap;
 	padding:1em 1em 1em 0.5em;
 }
@@ -255,8 +189,13 @@ table.bb-reports#bb_report_disciplines tr td.details {
 	white-space:normal;
 	min-width:40%;
 }
-table.bb-reports#bb_report_disciplines tr td.details a {
+table.bb-reports#bb_report_disciplines tr td.details a,
+table.bb-reports#bb_report_disciplines tr th a.toggle-all {
 	cursor: pointer;
+}
+table.bb-reports#bb_report_disciplines tr th a.toggle-all {
+	cursor: pointer;
+	float:left;
 }
 table.bb-reports#bb_report_disciplines tr td.food {
 	padding: 0 1em 0 1em;
@@ -268,8 +207,9 @@ table.bb-reports#bb_report_disciplines tr td.discipline {
 	text-align:left;
 }
 
+
 /********  submit SHEET   */
-/* FoRM ELEMENTS  */
+/* FORM ELEMENTS  */
 .new-effort textarea {
 	width:100%;
 	min-height:8em;
@@ -277,22 +217,13 @@ table.bb-reports#bb_report_disciplines tr td.discipline {
 .new-effort#submit_form_table {
 	width:100%;
 	height:70%;
-	
 }
-
-.new-effort#submit_form_table tr {
-
-	
-}
-
 .new-effort#submit_form_table tr td {
 	padding:1em .5em .5em .5em;
 
 }
-
 .new-effort#submit_form_table tr td.col-1 {
 		width:60%;
-
 }
 /* tabs elements*/
 div#tabs ul li span{
@@ -300,19 +231,20 @@ div#tabs ul li span{
 }
 
 table.bb-submit#bb_submit_table {
-	width:60%;
-	height:70%;
-	border-style:solid;
-	border-color:white;
+	width:100%;
 	margin:1em 2em 1em 3em;
 }
-table.bb-submit#bb_submit_table tr td {
+table.bb-submit#bb_submit_table tr td,
+li.ui-state-default {
 	text-align:center;
+	text-transform:capitalize;
+}
+table.bb-submit#bb_submit_table tr td.total {
+	text-align:right;
 }
 table.bb-submit#bb_submit_table tr td.discipline {
 	text-align:left;
 }
-
 
 /* - - - - TIME UI - - - - - */
 .duration {
@@ -325,44 +257,54 @@ table.bb-submit#bb_submit_table tr td.discipline {
 map area:hover {
 	cursor: pointer;	
 }
-
-div.map {
+ul.stretches {
 	position:absolute;
-	top:0px;
-	right:0px;
-	float:right;
+	top:49px;
+	margin:1em;
+	padding:1em;
+	clear:both;
+	min-width:70px;
+}
+table.stretches{
+	width:100%;
+}
+table.stretches tr td {
+	width:50%;
+	border: 1px solid #999;
 }
 
 /* - - - - - - Dailys - - - -- */
-textarea.consumed {
+/*textarea.consumed {
 	min-width:35em;
-}
-table.bb-dailys{
-	width:35%;
-}
-table.dailys tr td *{
-	width:35%;
-	float:left;
-}
+}*/
+
 table.stretches tr td.input {
-	width:49%;
+	min-width:49%;
 }
-table.stretches tr td.input ul.list * {
-	
-}
-li.stretch-link {
-	position:absolute;
-	bottom:0px;
+ul.stretches {
+	height:100%;
 }
 
 table.container{
-	width:70%;
-	height:500px;
+	width:99%;
 }
 table.container tr td {
 		height:100%;
 }
 .bb-dailys button {
-	margin: 2em 2em 2em 2em;
+	margin: 2em;
 }
+
+
+/* - - - EDITOR - - - - - */
+div.editor input {
+	disabled:true;
+}
+div.editor label {
+	float:left;
+}
+
+
+
+
 

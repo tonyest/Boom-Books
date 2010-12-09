@@ -5,16 +5,17 @@
  *
  *
  */
-function bb_insert_set($user_ID ,$date,$category,$description,$status,$parent){
+
+function bb_insert_set($user_ID ,$date,$category,$status,$parent){
 	global $wpdb;
-	$wpdb->insert( '$wpdb->bb_sets',
+	$table_prefix = $wpdb->prefix;
+	$wpdb->insert( $table_prefix.'bb_sets',
 		array( 'userID' => $user_ID,
 			'start' => $date ,
 			'category' => $category,
-			'description' => $description,
 			'status' => $status,
 			'parent' => $parent
-		), array( '%f', '%s','%s','%s','%s','%d' ) );
+		), array( '%f', '%s','%s','%s','%d' ) );
 }
 
 /*
@@ -24,7 +25,8 @@ function bb_insert_set($user_ID ,$date,$category,$description,$status,$parent){
  */
 function bb_insert_effort( $setID , $discipline , $setting , $difficulty , $duration , $distance , $details , $water ) {
 	global $wpdb;
-	$wpdb->insert( '$wpdb->bb_efforts',
+	$table_prefix = $wpdb->prefix;	
+	$wpdb->insert( $table_prefix.'bb_efforts',
 		array( 'setID' => $setID,
 	 		'discipline' => $discipline ,
 		 	'setting' => $setting,
@@ -33,7 +35,7 @@ function bb_insert_effort( $setID , $discipline , $setting , $difficulty , $dura
 			'distance' => $distance,
 			'details' => $details,
 			'water' => $water	
-		),array( '%d', '%s','%s','%d','%s','%f','%s','%d' ) );
+		),array( '%d', '%s','%s','%d','%s','%f','%s','%f' ) );
 }
 /*
  *  INSERT VALUES INTO STRETCHES TABLE
@@ -42,7 +44,8 @@ function bb_insert_effort( $setID , $discipline , $setting , $difficulty , $dura
  */
 function bb_insert_stretches( $setID , $muscle , $duration ) {
 	global $wpdb;
-	$wpdb->insert( '$wpdb->bb_stretches',
+	$table_prefix = $wpdb->prefix;
+	$wpdb->insert( $table_prefix.'bb_stretches',
 		array( 'setID' => $setID,
 	 		'muscle' => $muscle ,
 		 	'duration' => $duration
@@ -55,8 +58,9 @@ function bb_insert_stretches( $setID , $muscle , $duration ) {
  */
 function bb_insert_daily( $date , $RHR = 0 , $water = 0 , $sleep = 0 ) {
 	global $wpdb;
+	$table_prefix = $wpdb->prefix;
 	 $user_ID = wp_get_current_user();
-	$wpdb->insert( '$wpdb->bb_dailys',
+	$wpdb->insert( $table_prefix.'bb_dailys',
 		array( 'userID' => $user_id,
 	 		'date' => $date ,
 		 	'RHR' => $RHR,
@@ -71,7 +75,8 @@ function bb_insert_daily( $date , $RHR = 0 , $water = 0 , $sleep = 0 ) {
  */
 function bb_insert_journal($dailyID,$setID,$meal,$time,$foods){
 	global $wpdb;
-	$wpdb->insert( '$wpdb->bb_journals',
+	$table_prefix = $wpdb->prefix;
+	$wpdb->insert( $table_prefix.'bb_journals',
 		array( 'dailyID' => $dailyID,
 	 		'setID' => $setID ,
 		 	'meal' => $meal,
@@ -88,6 +93,32 @@ function bb_complete_set( $setID ){
 	global $wpdb;
 	$table_prefix = $wpdb->prefix;
 	$wpdb->update( $table_prefix.'bb_sets', array( 'status' => 'complete'), array( 'setID' => $setID ), array( '%s'), array( '%d' ) );
+}
+/*
+ * Query for daily
+ * returns full set if no args.
+ * 
+ *
+ */
+function get_daily ( $userID , $date) {
+	global $wpdb;
+	/* get query formatted sets between period */
+		$row = $wpdb->get_results("SELECT * FROM $wpdb->bb_dailys WHERE userID=".$userID." AND date='".date('Y-m-d',$date)."'",'OBJECT_K');
+		return $row;
+}
+/*
+ * Query for program type set
+ * returns full set if no args.
+ * 
+ *
+ */
+function get_bb_set( $setID , $category = 'program' ) {
+	global $wpdb;
+	$current_user = wp_get_current_user();
+	
+	/* get query formatted sets between period */
+		$set = $wpdb->get_results("SELECT * FROM $wpdb->bb_sets JOIN $wpdb->bb_efforts ON $wpdb->bb_sets.setID=$wpdb->bb_efforts.setID WHERE userID=".$current_user->ID." AND category='".$category."' AND $wpdb->bb_efforts.setID=".$setID);
+		return $set;
 }
 /*
  * 	
@@ -169,21 +200,6 @@ function zero_pad ($number){
 	return (($number < 10 )? '0' : '') . $number;
 }
 /*
- * Query for program type set
- * returns full set if no args.
- * 
- *
- */
-function get_bb_set( $setID , $category = 'program' ) {
-	global $wpdb;
-	$current_user = wp_get_current_user();
-	
-	/* get query formatted sets between period */
-		$set = $wpdb->get_results("SELECT * FROM $wpdb->bb_sets JOIN $wpdb->bb_efforts ON $wpdb->bb_sets.setID=$wpdb->bb_efforts.setID WHERE userID=".$current_user->ID." AND category='".$category."' AND $wpdb->bb_efforts.setID=".$setID);
-		return $set;
-}
-
-/*
  *BOOM BOOKS custom type template
  *load a custom template type for boom books custom type
  *
@@ -215,61 +231,92 @@ add_action('wp_ajax_bb_ajax_i18n_update', 'bb_ajax_i18n_callback');
  *
  */
 function bb_submit_callback() {
-	unset($_POST['action']);//roll over and knock the top off!
-//	error_log( 'variable contains = ' . print_r( $_POST, true ) );
+
+		error_log(print_r($_POST,true));
+
 	global $wpdb;
 	$current_user = wp_get_current_user();
 
-	$set = array_shift($_POST);
-		$user_ID =		$current_user->ID;
-		$date =			date_i18n( 'Y-m-d H:i:s' , strtotime( $set['date'] ) + ( $set['time']*60*60 ),false);
+	$set = $_POST['set'];
+		$user_ID =		(int)$current_user->ID;
+		$date =			date_i18n( 'Y-m-d H:i:s' , strtotime( $_POST['date'] ) + ( $set['time']*60*60 ),false);
+		$daily_date = 	date( 'Y-m-d' , strtotime( $_POST['date'] ),false);
 		$category =		$set['category'];
-		$description =	$set['description'];
 		$status =		'complete';
 		$parent =		$set['parent'];//setID of referred set (program)
-		
-//error_log( 'decon set = ' . print_r( compact('user_ID','date','category','description','status','parent'), true ) );
-	//input to set and retrieve auto setID
-	bb_insert_set($user_ID,$date,$category,$description,$status,$parent);
+
+//	bb_insert_set($user_ID,$date,$category,$status,$parent);
+	
 	if( isset($set['parent']) ){
 		bb_complete_set( $parent );
 	}
 
-//	error_log( 'variable contains = ' . print_r( $_POST, true ) );
 	$setID = $wpdb->insert_id;
-		foreach ( $_POST as $effort ){
+		foreach ( $_POST['effort'] as $effort ) {
 		$discipline =	$effort['discipline'];
 		$setting =		$effort['setting'];
-		$duration =		$effort['h'].$effort['m'].$effort['s'];
+		$duration =		$effort['h'].':'.$effort['m'].':'.$effort['s'];
 		$details =		$effort['details'];
 		$distance =		(float)$effort['distance'];
 		$difficulty =	(int)$effort['difficulty'];
+		$water =		(float)$effort['water'];
+		
+		if ( 'swimming' == $discipline )
+			$distance = $distance/1000; //convert meters to kilometers
+
+		bb_insert_effort( $setID , $discipline , $setting , $difficulty , $duration , $distance , $details , $water );
+
 		$foods =		$effort['foods'];
 		$meal = 		'during';
-		$water =		(int)$effort['water'];
-		if ( 'swimming' == $discipline )
-			$distance = $distance/1000;
-				
-//error_log( 'recurse decon effort = ' . print_r( compact('setID','discipline','setting','difficulty','duration','distance','details'), true ) );
-			bb_insert_effort($setID,$discipline,$setting,$difficulty,$duration,$distance,$details,$water);
-			
-		if ( isset($foods) && !empty($foods) ) {
-			$effortID = $wpdb->insert_id;
 			static $dailyID;
-
-			if ( isset($dailyID) && empty($dailyID) )
-				$dailyID = $wpdb->get_var($wpdb->prepare("SELECT dailyID FROM $wpdb->bb_dailys WHERE date=".$date." AND userID=".$userID));
-				
-			if ( !isset($dailyID) || empty($dailyID) ) {	
-				bb_insert_daily( $date );
-				$dailyID = $wpdb->insert_id;		
+		if ( isset($foods) ) {
+			if ( !isset( $dailyID ) || empty( $dailyID )) {
+				$row = get_daily( $user_ID , $daily_date );
+				$dailyID = $row['dailyID'];
+				if ( empty( $dailyID ) || !isset( $dailyID ) ) {
+					bb_insert_daily( $daily_date );
+					$dailyID = $wpdb->insert_id;		
+				}
 			}
-			bb_insert_journal( $setID , $effortID , $dailyID , $meal , $time, $foods );
+			bb_insert_journal( $setID , $effortID , $dailyID , $meal , $time, $foods );	
 		}
 	}
 	echo ( 'program' == $set['category'] )? 'Program submitted.' : 'Your efforts are immortalised.' ;
 	die();
 }
 add_action('wp_ajax_bb_submit', 'bb_submit_callback');
+
+function boomb_submit_callback() {
+
+		error_log(print_r($_POST,true));
+
+	echo 'Your efforts are immortalised.' ;
+	die();
+}
+add_action('wp_ajax_boomb_submit', 'boomb_submit_callback');
+
+function bb_journal_submit_callback () {
+	
+		error_log(print_r($_POST,true));
+
+	global $wpdb;
+	$current_user = wp_get_current_user();
+
+	$journal = $_POST['journal'];
+		$user_ID =		(int)$current_user->ID;
+		$date =			date_i18n( 'Y-m-d H:i:s' , strtotime( $_POST['date'] ) + ( $set['time']*60*60 ),false);
+		$daily_date = 	date( 'Y-m-d' , strtotime( $_POST['date'] ),false);
+		$meal = 		$journal['meal'];
+		$foods = 		$journal['foods'];
 		
- ?>
+		/*
+		setID bigint(20) UNSIGNED,
+		effortID biging(20) UNSIGNED,
+		dailyID bigint(20) UNSIGNED NOT NULL,
+		meal tinytext NOT NULL,
+		time time NOT NULL,
+		foods text NOT NULL,
+		*/
+}
+
+?>

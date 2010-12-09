@@ -3,7 +3,7 @@
 Plugin Name: Boom Books
 Plugin URI: http://
 Description: Boom Books is an interface for exercise logging and reporting
-Version: 0.0
+Version: 0.1
 Author: Anthony Khoo
 Author URI: http://boomtimecyclesystems.com.au
 License: GPL2
@@ -20,6 +20,29 @@ register_activation_hook(__FILE__,'bb_dbinstall');
 include_once(BB_PLUGIN_DIR.'/includes/functions.php');
 include_once(BB_PLUGIN_DIR.'/bb-load.php');
 include_once(BB_PLUGIN_DIR.'/bb-templatetags.php');
+
+/*
+ *BOOM BOOKS custom type
+ *install the first boombooks custom page
+ *
+ *				Create Boom Book Page
+ */
+register_activation_hook( __FILE__, 'install_boombook' );
+function install_boombook(){
+	error_log('make page');
+	global $wpdb,$current_user;	
+		$post_data = array(
+			'post_status' => 'publish', 
+			'post_type' => 'page',
+			'ping_status' => get_option('default_ping_status'),
+			'post_name' => 'boom-book', // The name (slug) for your post
+			'post_content' => 'Boom Books Content',
+			'post_excerpt' => 'Boom Books is the conduit between member and coach',
+			'post_title' => __('Boom Books' , 'bb')
+		);
+		return $post_id = wp_insert_post($post_data, false);
+}
+
 
 /*
  * Table constructor for Boom Books tables
@@ -92,13 +115,13 @@ function bb_dbinstall () {
 	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
 
 		$sql = "CREATE TABLE " . $table_name . " (
-			dailiyID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			dailyID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			userID bigint(20) UNSIGNED NOT NULL,
 			date date NOT NULL,
 			RHR tinyint(3) UNSIGNED DEFAULT '0' NOT NULL,
 			water tinyint(3) UNSIGNED DEFAULT '0' NOT NULL,
 			sleep tinyint(3) UNSIGNED DEFAULT '0' NOT NULL,		
-			PRIMARY KEY  (dailiyID,userID),
+			PRIMARY KEY  (dailyID,userID,date),
 			FOREIGN KEY (userID) REFERENCES wp_users(ID)
 		);";
       dbDelta($sql);

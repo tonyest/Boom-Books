@@ -10,31 +10,39 @@
  */
 add_action( 'admin_init', 'bb_admin_init_scripts' );
 function bb_admin_init_scripts() {
-	wp_deregister_script('jquery');
-//external java libraries
-	//wp_register_script('jquery', ("https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"), false, '1.4.3','');
-	//wp_register_script('jqueryUI', ("https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/jquery-ui.min.js"), 'jquery','1.8.6','');
-	wp_register_script('jquery',BB_PLUGIN_URL.'/js/jquery-1.4.2.min.js',false,'1.4.3','');
-	wp_register_script('jqueryUI',BB_PLUGIN_URL.'/js/jquery-ui-1.8.6.custom.min.js', 'jquery','1.8.6','');
-	wp_register_script('bb-admin',BB_PLUGIN_URL.'/js/bb-admin.js','jqueryUI');
-	wp_register_script('bb-admin-submit',BB_PLUGIN_URL.'/js/bb-admin-submit.js','jqueryUI');
-	wp_register_script('jqueryUI-spinner',BB_PLUGIN_URL.'/js/ui.spinner.js','jqueryUI');
-	wp_register_script('jqueryUI-spinner-min',BB_PLUGIN_URL.'/js/ui.spinner.min.js','jqueryUI');
+//	wp_deregister_script('jquery');
 
-//	wp_enqueue_style('jqdark',BB_PLUGIN_URL.'/css/ui-darkness/jquery-ui-1.8.6.custom.css',false,'1.8.6');
-	wp_enqueue_style('jq_eggplant',BB_PLUGIN_URL.'/css/custom-theme/jquery-ui-1.8.6.custom.css',false,'1.8.6');
-	wp_enqueue_style('bb-admin-style', BB_PLUGIN_URL.'/css/bb-admin-style.css');
+//	wp_register_script('jquery',BB_PLUGIN_URL.'/js/jquery-1.4.2.min.js',false,'1.4.3','');
+//	wp_register_script('jqueryUI',BB_PLUGIN_URL.'/js/jquery-ui-1.8.6.custom.min.js', 'jquery','1.8.6','');
+//	wp_register_script('jqueryUI-core',BB_PLUGIN_URL.'/js/ui/jquery.ui.core.js', 'jquery','1.8.6','');
+//	wp_register_script('jqueryUI-datepicker',BB_PLUGIN_URL.'/js/ui/jquery.ui.datepicker.js', 'jqueryUI-core','1.8.6','');
+		
+//	wp_register_script('bb-admin',BB_PLUGIN_URL.'/js/bb-admin.js','jqueryUI');
+//	wp_register_script('bb-admin-submit',BB_PLUGIN_URL.'/js/bb-admin-submit.js','jqueryUI');
+//	wp_register_script('jqueryUI-spinner',BB_PLUGIN_URL.'/js/ui.spinner.js','jqueryUI');
+//	wp_register_script('jqueryUI-spinner-min',BB_PLUGIN_URL.'/js/ui.spinner.min.js','jqueryUI');
+
+//	wp_enqueue_style('redmond',BB_PLUGIN_URL.'/css/redmond/jquery-ui-1.8.6.custom.css',false,'1.8.6');
+//	wp_enqueue_style('bb-admin-style', BB_PLUGIN_URL.'/css/bb-admin-style.css');
 	wp_enqueue_style('google-fonts','http://fonts.googleapis.com/css?family=Reenie+Beanie|IM+Fell+DW+Pica+SC&subset=latin');
 }
 function bb_admin_scripts() {
-	wp_enqueue_script('jquery');
-	wp_enqueue_script('jqueryUI');
-	wp_enqueue_script('jqueryUI-spinner');
-	wp_enqueue_script('jqueryUI-spinner-min');
-	wp_enqueue_script( 'bb-admin');
+//	wp_enqueue_script('jquery');
+//	wp_enqueue_script('jqueryUI');
+	
+//	wp_enqueue_script('jqueryUI-core');
+//	wp_enqueue_script('jqueryUI-datepicker');
+//	wp_enqueue_script('jqueryUI-spinner');
+//	wp_enqueue_script('jqueryUI-spinner-min');
+	
+//	wp_enqueue_script( 'bb-admin');
 }
 function bb_submit_scripts() {
-		wp_enqueue_script( 'bb-admin-submit');
+//		wp_enqueue_script( 'bb-admin-submit');
+
+	wp_enqueue_script('common');
+	wp_enqueue_script('wp-lists');
+	wp_enqueue_script('postbox');
 }
 /*
  *BOOM BOOKS ADMIN MENU CONSTRUCTOR	
@@ -44,16 +52,18 @@ function bb_submit_scripts() {
  */
 add_action( 'admin_menu', 'bb_admin_menu' );
 function bb_admin_menu() {
-	/* Register our plugin page */
+	
 	$page_title = __( 'Boom Books', 'boom_books' );
 	$menu_title = __( 'Boom Books', 'boom_books' );
 	$capability = 'edit_posts';
 	$menu_slug = 'boom_books';
 	$function = 'bb_admin_menu_boom_books';
 	$icon_url = '/wp_BT/favicon.ico';
-	$position = '';
 
 	$page = add_menu_page( $page_title , $menu_title , $capability , $menu_slug , $function , $icon_url );
+				add_action( 'admin_print_scripts-' . $page , 'bb_admin_scripts' );
+				add_action( 'admin_print_scripts-' . $page , 'bb_submit_scripts' );					
+	$page = add_submenu_page( $menu_slug, __( 'Program', 'boom_books' ) , __( 'Program', 'boom_books' ) , $capability , 'boom_books' , $function ); 
 				add_action( 'admin_print_scripts-' . $page , 'bb_admin_scripts' );
 				
 	$page = add_submenu_page( $menu_slug, __( 'Reports', 'boom_books' ) , __( 'Reports', 'boom_books' ) , $capability , 'bb_reports' , 'bb_admin_submenu_report' ); 
@@ -62,13 +72,22 @@ function bb_admin_menu() {
 	$page = add_submenu_page( $menu_slug , __( 'Submit', 'boom_books' ) , __( 'Submit', 'boom_books' ) , $capability , 'bb_submit' , 'bb_admin_submenu_submit' ); 
 				add_action( 'admin_print_scripts-' . $page , 'bb_admin_scripts' );
 				add_action( 'admin_print_scripts-' . $page , 'bb_submit_scripts' );	
+
+add_meta_box(	'programs', __('Program'), 'get_program', 'boom-books_page_bb_submit', 'normal', 'core');
+//add_meta_box(	'reports', __('Reports'), 'get_report', 'boom-books_page_bb_submit', 'normal', 'core');
+
+add_meta_box(	'editor', __('Editor'), 'get_editor', 'boom-books_page_bb_submit', 'side', 'core');
+//add_meta_box(	'summary', __('Summary'), 'get_summary', 'boom-books_page_bb_submit', 'side', 'core');
 								
 	$page = add_submenu_page( $menu_slug , __( 'Program Author', 'boom_books' ) , __( 'Program Author', 'boom_books' ) , 'edit_others_posts' , 'bb_author' , 'bb_admin_submenu_author' );
 				add_action( 'admin_print_scripts-' . $page , 'bb_admin_scripts' );
 				add_action( 'admin_print_scripts-' . $page , 'bb_submit_scripts' );	
 							
-	$page = add_submenu_page( $menu_slug, __( 'Dailys', 'boom_books' ), __( 'Dailys', 'boom_books' ), $capability, 'dailys', 'bb_admin_submenu_dailys'); 
-				add_action('admin_print_scripts-' . $page,'bb_admin_scripts');
+//	$page = add_submenu_page( $menu_slug, __( 'Dailys', 'boom_books' ), __( 'Dailys', 'boom_books' ), $capability, 'dailys', 'bb_admin_submenu_dailys'); 
+//				add_action('admin_print_scripts-' . $page,'bb_admin_scripts');
+
+//				$page = add_submenu_page( $menu_slug, __( 'playground', 'boom_books' ), __( 'playground', 'boom_books' ), $capability, 'playground', 'bb_admin_submenu_playground'); 
+//							add_action('admin_print_scripts-' . $page,'bb_playground_script');				
 }
 /*
  *BOOM BOOKS admin menu content 
@@ -83,39 +102,46 @@ function bb_admin_menu_boom_books() {
 function bb_admin_submenu_author() {
 	include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-author.php');
 }
-function bb_admin_submenu_submit(){
+function bb_admin_submenu_submit() {
 	include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-submit.php');
 }
-function bb_admin_submenu_report(){
+function bb_admin_submenu_report() {
 	include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-report.php');
 }
-function bb_admin_playground(){
+function bb_admin_playground() {
 	include(BB_PLUGIN_DIR.'/bb-menu/bb-playground.php');
 }
-function bb_admin_submenu_dailys(){
+function bb_admin_submenu_dailys() {
 //	include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-template-1.1.php');
 	include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-dailys.php');
 }
-/*
- *BOOM BOOKS custom type
- *install the first boombooks custom page
- *
- *				DISABLED
- */
-//register_activation_hook( __FILE__, 'install_boombook' );
-function install_boombook(){
-	global $wpdb,$current_user;	
-		$post_data = array(
-			'post_status' => 'publish', 
-			'post_type' => 'boom_book',
-			'ping_status' => get_option('default_ping_status'),
-			'post_name' => 'boom-book', // The name (slug) for your post
-			'post_content' => 'Boom', //include(__DIR__.'/include/template2.php')
-			'post_excerpt' => 'Boom Books is the conduit between member and coach',
-			'post_title' => 'Boom Books'
-		);
-		return $post_id = wp_insert_post($post_data, false);
+function bb_admin_submenu_playground () {
+	include(BB_PLUGIN_DIR.'/bb-menu/bb-menu-playground.php');
 }
+
+function bb_load_db(){
+	global $wpdb;
+	$table_prefix = $wpdb->prefix;
+	if (!isset($wpdb->bb_sets)) {
+		$wpdb->bb_sets = $table_prefix . 'bb_sets';
+	}
+	if (!isset($wpdb->bb_efforts)) {
+		$wpdb->bb_efforts = $table_prefix . 'bb_efforts';
+	}
+	if (!isset($wpdb->bb_stretches)) {
+		$wpdb->bb_stretches = $table_prefix . 'bb_stretches';
+	}
+	if (!isset($wpdb->bb_journals)) {
+		$wpdb->bb_journals = $table_prefix . 'bb_journals';
+	}
+	if (!isset($wpdb->bb_dailys)) {
+		$wpdb->bb_dailys = $table_prefix . 'bb_dailys';
+	}
+}
+add_action( 'admin_menu', 'bb_load_db' );
+
+
+
 /*
  *BOOM BOOKS custom type
  *register a custom template type for boom books type
@@ -153,25 +179,43 @@ $labels = array(
  register_post_type('boom_books',$args);
 }
 
-function bb_load_db(){
-	global $wpdb;
-	$table_prefix = $wpdb->prefix;
-	if (!isset($wpdb->bb_sets)) {
-		$wpdb->bb_sets = $table_prefix . 'bb_sets';
-	}
-	if (!isset($wpdb->bb_efforts)) {
-		$wpdb->bb_efforts = $table_prefix . 'bb_efforts';
-	}
-	if (!isset($wpdb->bb_stretches)) {
-		$wpdb->bb_stretches = $table_prefix . 'bb_stretches';
-	}
-	if (!isset($wpdb->bb_journals)) {
-		$wpdb->bb_journals = $table_prefix . 'bb_journals';
-	}
-	if (!isset($wpdb->bb_dailys)) {
-		$wpdb->bb_dailys = $table_prefix . 'bb_dailys';
-	}
-}
-add_action( 'admin_menu', 'bb_load_db' );
+// register FooWidget widget
+include_once(BB_PLUGIN_DIR.'/bb-widget.class.php');
+add_action('widgets_init', create_function('', 'return register_widget("bboom_widget");'));
+add_action('widgets_init', create_function('', 'return register_widget("boomb_stats_widget");'));
 
+
+/*
+ *		Boom books init
+ *		
+ *
+ *
+ */
+function bb_init() {
+
+	load_plugin_textdomain( 'boomb', NULL, BB_PLUGIN_DIR );		//set internationalisation domain		
+		
+	if ( !is_admin() ) {
+			wp_register_script('jquery',BB_PLUGIN_URL.'/js/jquery-1.4.2.min.js',false,'1.4.3','');
+			wp_register_script('jqueryUI',BB_PLUGIN_URL.'/js/jquery-ui-1.8.6.custom.min.js', 'jquery','1.8.6','');
+			wp_register_script('jqueryUI-core',BB_PLUGIN_URL.'/js/ui/jquery.ui.core.js', 'jquery','1.8.6','');
+			wp_register_script('jqueryUI-datepicker',BB_PLUGIN_URL.'/js/ui/jquery.ui.datepicker.js', 'jqueryUI-core','1.8.6','');
+
+			wp_register_script('jqueryUI-spinner',BB_PLUGIN_URL.'/js/ui.spinner.js','jqueryUI');
+			wp_register_script('jqueryUI-spinner-min',BB_PLUGIN_URL.'/js/ui.spinner.min.js','jqueryUI');
+
+			wp_enqueue_style('redmond',BB_PLUGIN_URL.'/css/redmond/jquery-ui-1.8.6.custom.css',false,'1.8.6');
+		//	wp_enqueue_style('bb-admin-style', BB_PLUGIN_URL.'/css/bb-admin-style.css');
+			wp_enqueue_style('bb-admin-style', BB_PLUGIN_URL.'/css/bb-widget.css');	
+			wp_enqueue_style('google-fonts','http://fonts.googleapis.com/css?family=Reenie+Beanie|IM+Fell+DW+Pica+SC&subset=latin');
+			wp_enqueue_script('jquery');
+			wp_enqueue_script('jqueryUI');
+
+			wp_enqueue_script('jqueryUI-core');
+//			wp_enqueue_script('jqueryUI-datepicker');
+			wp_enqueue_script('jqueryUI-spinner');
+			wp_enqueue_script('jqueryUI-spinner-min');
+	}	
+}
+add_action( 'init' , 'bb_init' );
 ?>

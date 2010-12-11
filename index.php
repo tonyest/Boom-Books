@@ -62,9 +62,12 @@ function bb_dbinstall () {
 		$sql = "CREATE TABLE " . $table_name . " (
 			setID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			userID bigint(20) UNSIGNED NOT NULL,
-			start datetime NOT NULL,
+			start_date date NOT NULL,
+			start_time time NOT NULL,
 			category tinytext NOT NULL,			
 			status tinytext NOT NULL,
+			name tinytext,
+			description text,
 			parent bigint(20) UNSIGNED,
 			PRIMARY KEY  (setID),
 			FOREIGN KEY (userID) REFERENCES wp_users(ID)
@@ -73,14 +76,13 @@ function bb_dbinstall () {
       dbDelta($sql);
    }
 	/* Boom Books 'bb_efforts' table constructor */
-
 	$table_name = $wpdb->prefix . "bb_efforts";
 	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
 
 		$sql = "CREATE TABLE " . $table_name . " (
 			effortID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			setID bigint(20) UNSIGNED NOT NULL,
-			discipline tinytext NOT NULL,
+			sport tinytext NOT NULL,
 			setting tinytext NOT NULL,			
 			difficulty tinyint(2) UNSIGNED DEFAULT '0' NOT NULL,
 			duration time NOT NULL,
@@ -95,7 +97,6 @@ function bb_dbinstall () {
       dbDelta($sql);
    }
 	/* Boom Books 'bb_stretches' table constructor */
-
 	$table_name = $wpdb->prefix . "bb_stretches";
 	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
 
@@ -110,7 +111,6 @@ function bb_dbinstall () {
       dbDelta($sql);
    }
 	/* Boom Books 'bb_daily' table constructor */
-
 	$table_name = $wpdb->prefix . "bb_dailys";
 	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
 
@@ -127,7 +127,6 @@ function bb_dbinstall () {
       dbDelta($sql);
    }
 	/* Boom Books 'bb_journal' table constructor */
-
 	$table_name = $wpdb->prefix . "bb_journals";
 	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
 
@@ -144,7 +143,23 @@ function bb_dbinstall () {
 		);";
       dbDelta($sql);
    }
-      add_option("bb_db_version", $bb_db_version);
+	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
+
+		$sql = "CREATE TABLE " . $table_name . " (
+			setID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			userID bigint(20) UNSIGNED NOT NULL,
+			start_date date NOT NULL,
+			start_time time NOT NULL,
+			category tinytext NOT NULL,			
+			status tinytext NOT NULL,
+			parent bigint(20) UNSIGNED,
+			PRIMARY KEY  (setID),
+			FOREIGN KEY (userID) REFERENCES wp_users(ID)
+		);";
+
+      dbDelta($sql);
+   }
+	add_option("bb_db_version", $bb_db_version);
 }
 
 /*

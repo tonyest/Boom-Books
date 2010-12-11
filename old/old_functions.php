@@ -129,7 +129,7 @@ LOG
 	string		time of day array [dusk,morning,midday,afternoon,dusk,night]
 	string		Exercise environment [road,gym,pool,open water,wind trainer]
 	string		Describe it
-	string		activity [cycling,running,swimming,resistance training]
+	string		activity [cycle,run,swim,resistance training]
 	datetime 	time
 	int			distance
 	string		Feeling Before, During and After

@@ -6,12 +6,13 @@
  *
  */
 
-function bb_insert_set($user_ID ,$date,$category,$status,$parent){
+function bb_insert_set( $user_ID , $date , $time , $category , $status , $parent ) {
 	global $wpdb;
 	$table_prefix = $wpdb->prefix;
 	$wpdb->insert( $table_prefix.'bb_sets',
 		array( 'userID' => $user_ID,
-			'start' => $date ,
+			'start_date' => $date ,
+			'start_time' => $time,
 			'category' => $category,
 			'status' => $status,
 			'parent' => $parent
@@ -23,12 +24,12 @@ function bb_insert_set($user_ID ,$date,$category,$status,$parent){
  *
  *
  */
-function bb_insert_effort( $setID , $discipline , $setting , $difficulty , $duration , $distance , $details , $water ) {
+function bb_insert_effort( $setID , $sport , $setting , $difficulty , $duration , $distance , $details , $water ) {
 	global $wpdb;
 	$table_prefix = $wpdb->prefix;	
 	$wpdb->insert( $table_prefix.'bb_efforts',
 		array( 'setID' => $setID,
-	 		'discipline' => $discipline ,
+	 		'sport' => $sport ,
 		 	'setting' => $setting,
 			'difficulty' => $difficulty,
 			'duration' =>  $duration,
@@ -93,6 +94,42 @@ function bb_complete_set( $setID ){
 	global $wpdb;
 	$table_prefix = $wpdb->prefix;
 	$wpdb->update( $table_prefix.'bb_sets', array( 'status' => 'complete'), array( 'setID' => $setID ), array( '%s'), array( '%d' ) );
+}
+/*
+ * Query for programs
+ * returns full set if no args.
+ * 
+ *
+ */
+function get_program_results ($from , $to , $current_user ) {
+	global $wpdb;
+	/* get query formatted sets between period */
+		$sets = $wpdb->get_results("SELECT wp_bb_sets.setID , start_date ,TIME_TO_SEC(start_time) AS start_time, GROUP_CONCAT(DISTINCT sport SEPARATOR ' , ') AS sport , GROUP_CONCAT( DISTINCT setting SEPARATOR ' / ') AS setting , CAST(AVG(difficulty) AS UNSIGNED) AS difficulty , SEC_TO_TIME ( SUM( TIME_TO_SEC(duration) ) ) AS duration, CAST(SUM(distance)AS decimal(6,1)) AS distance , status FROM wp_bb_sets JOIN wp_bb_efforts ON wp_bb_sets.setID=wp_bb_efforts.setID WHERE userID=".$current_user->ID." AND category='program' AND start_date BETWEEN STR_TO_DATE('".$from."','%W %d-%M-%Y')AND STR_TO_DATE('".$to."','%W %d-%M-%Y') GROUP BY wp_bb_efforts.setID");
+		return $sets;
+}
+/*
+ * General Query for sessions
+ * 
+ * @args: userID , $range{ $from , $to } , $category , $setID
+ * 
+ *
+ */
+function get_session_results( $args ) {
+	global $wpdb;
+	extract($args);
+	$current_user = wp_get_current_user();	
+	$table_prefix = $wpdb->prefix;
+//STR_TO_DATE('".$to."','%W %d-%M-%Y')
+	$where .= ( isset($userID) )? ' AND userID="'.$userID.'"' : ' AND userID="'.$current_user->ID.'"' ;
+	$where .= ( isset($range) )? ' AND start_date BETWEEN STR_TO_DATE("'. $range['from']. '" , "%W %d-%M-%Y" ) AND STR_TO_DATE("'. $range['to']. '" , "%W %d-%M-%Y" )' : '' ;
+	$where .= ( isset($category) )? ' AND category="'.$category.'"' : 'AND category="session"' ;
+	$where .= ( isset($setID) )? ' AND '.$table_prefix.'bb_sets.setID="'.$setID.'"' : '' ;
+
+	$sets = $wpdb->get_results("SELECT ".$table_prefix."bb_sets.setID , DATE_FORMAT(start_date,'%a %d-%b-%Y') AS start_date, start_time, sport , setting , difficulty , duration , distance , status 
+		FROM ".$table_prefix."bb_efforts JOIN ".$table_prefix."bb_sets 
+			ON ".$table_prefix."bb_sets.setID=".$table_prefix."bb_efforts.setID 
+		WHERE 1=1 ".$where);
+	return $sets;
 }
 /*
  * Query for daily
@@ -188,7 +225,7 @@ function itr ($arg,$condition='empty') {
  * takes a date and returns whether it's morning or night
  *
  */
-function am_pm ($date){
+function am_pm ($date) {
 	return  date('A',strtotime($date));
 }
 /*
@@ -239,13 +276,14 @@ function bb_submit_callback() {
 
 	$set = $_POST['set'];
 		$user_ID =		(int)$current_user->ID;
-		$date =			date_i18n( 'Y-m-d H:i:s' , strtotime( $_POST['date'] ) + ( $set['time']*60*60 ),false);
+		$date =			date_i18n( 'Y-m-d H:i:s' , strtotime( $_POST['date'] ) , false);
 		$daily_date = 	date( 'Y-m-d' , strtotime( $_POST['date'] ),false);
 		$category =		$set['category'];
 		$status =		'complete';
 		$parent =		$set['parent'];//setID of referred set (program)
+		$time =  		$set['time']*60*60 ;
 
-//	bb_insert_set($user_ID,$date,$category,$status,$parent);
+//	bb_insert_set($user_ID,$date,$time,$category,$status,$parent);
 	
 	if( isset($set['parent']) ){
 		bb_complete_set( $parent );
@@ -253,7 +291,7 @@ function bb_submit_callback() {
 
 	$setID = $wpdb->insert_id;
 		foreach ( $_POST['effort'] as $effort ) {
-		$discipline =	$effort['discipline'];
+		$sport =	$effort['sport'];
 		$setting =		$effort['setting'];
 		$duration =		$effort['h'].':'.$effort['m'].':'.$effort['s'];
 		$details =		$effort['details'];
@@ -261,10 +299,10 @@ function bb_submit_callback() {
 		$difficulty =	(int)$effort['difficulty'];
 		$water =		(float)$effort['water'];
 		
-		if ( 'swimming' == $discipline )
+		if ( 'swim' == $sport )
 			$distance = $distance/1000; //convert meters to kilometers
 
-		bb_insert_effort( $setID , $discipline , $setting , $difficulty , $duration , $distance , $details , $water );
+		bb_insert_effort( $setID , $sport , $setting , $difficulty , $duration , $distance , $details , $water );
 
 		$foods =		$effort['foods'];
 		$meal = 		'during';
@@ -287,13 +325,74 @@ function bb_submit_callback() {
 add_action('wp_ajax_bb_submit', 'bb_submit_callback');
 
 function boomb_submit_callback() {
+	error_log(print_r($_POST,true));
+	global $wpdb;
+	$current_user = wp_get_current_user();
 
-		error_log(print_r($_POST,true));
+		$user_ID =		(int)$current_user->ID;
+		$date =			date_i18n( 'Y-m-d' , strtotime( $_POST['start_date'] ) , false);
+		$category =		$_POST['category'];
+		$status =		'complete';
+		$parent =		$_POST['parent'];//setID of referred set (program)
+		$time =  		$_POST['start_time'];
 
-	echo 'Your efforts are immortalised.' ;
+//	bb_insert_set($user_ID,$date,$time,$category,$status,$parent);
+
+	if( isset($session['parent']) ) {
+		bb_complete_set( $parent );
+	}
+
+	$setID = $wpdb->insert_id;
+	foreach ( $_POST['sets'] as $set ) {
+		$sport =	$set['sport'];
+		$setting =		$set['setting'];
+		$duration =		$set['duration'];
+		$details =		$set['details'];
+		$distance =		(float)$set['distance'];
+		$difficulty =	(int)$set['difficulty'];
+		$water =		(float)$set['water'];
+
+		if ( 'swim' == $sport )
+			$distance = $distance/1000; //convert meters to kilometers
+
+//		bb_insert_effort( $setID , $sport , $setting , $difficulty , $duration , $distance , $details , $water );
+	}
+		echo ( 'program' == $set['category'] )? 'Program submitted.' : 'Your efforts are immortalised.' ;
 	die();
 }
 add_action('wp_ajax_boomb_submit', 'boomb_submit_callback');
+
+function get_session_callback() {
+	global $wpdb;
+	$setID = $_POST['setID'];
+	$category = $_POST['category'];
+	
+	$table_prefix = $wpdb->prefix;
+			$function_sets = $wpdb->get_results("SELECT ".$table_prefix."bb_sets.setID , DATE_FORMAT(start_date,'%a  %d-%b-%Y') AS start_date, start_time, sport , setting , difficulty , duration , distance , status 
+			FROM ".$table_prefix."bb_efforts JOIN ".$table_prefix."bb_sets 
+				ON ".$table_prefix."bb_sets.setID=".$table_prefix."bb_efforts.setID 
+			WHERE category='program' AND ".$table_prefix."bb_sets.setID='".$setID."'");
+
+		$sets = get_session_results( array( 'setID' => $setID , 'category' => $category ) );
+		error_log(print_r('function' . $sets,true));
+		error_log(print_r('query' . $function_sets,true));
+			foreach( $sets as &$set ){
+				$jquery_obj = array();
+				foreach($set as $name => $value){
+					array_push($jquery_obj , array( 'name' => $name , 'value' => $value));
+				}
+				$set = $jquery_obj;
+			}
+			unset($set);	// break the reference with the last element
+
+	if (isset($sets) && !empty($sets))
+		echo json_encode($sets);
+	else
+		echo 'nothing returned';
+
+	die();
+}
+add_action('wp_ajax_get_session', 'get_session_callback');
 
 function bb_journal_submit_callback () {
 	
@@ -319,4 +418,31 @@ function bb_journal_submit_callback () {
 		*/
 }
 
+/*
+ *  REDIRECT Boom Books page to custom template
+ *
+ * 
+ *
+ */
+function boomb_template_redirect () {
+if (is_page('boom-book-4')):
+	include(BB_PLUGIN_DIR . '/bb-template.php');
+	exit;
+endif;
+}
+add_action('template_redirect','boomb_template_redirect');
+
+
+
+if ( function_exists ('register_sidebar')) { 
+	$args = array(
+		'name'          => sprintf(__('BoomBar') , 'boomb' ),
+		'id'            => 'boom-bar',
+		'description'   => 'BoomBooks Custom Sidebar',
+		'before_widget' => '<li id="%1$s" class="widget-area">',
+		'after_widget'  => '</li>',
+		'before_title'  => '<h3 class="bb-widget">',
+		'after_title'   => '</h3>' );
+    register_sidebar( $args );
+}
 ?>

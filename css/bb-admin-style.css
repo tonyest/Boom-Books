@@ -4,69 +4,25 @@
  *
  */
 /*----------MENU ELEMENTS---------*/
-li a[href~="admin.php?page=boom_books"],
-li a[href~="admin.php?page=bb_reports"],
-li a[href~="admin.php?page=bb_submit"],
-li a[href~="admin.php?page=bb_author"],
-li a[href~="admin.php?page=dailys"] {
-	/*	color:#21759B!important; */
-	font-family: 'Reenie Beanie','IM Fell DW Pica SC'!important;
-	font-size:1.6em!important;
-	white-space:nowrap;
-	min-width:5em!important;
-}
 
-li a[href~="admin.php?page=boom_books"]:hover,
-li a[href~="admin.php?page=bb_program"]:hover,
-li a[href~="admin.php?page=bb_reports"]:hover,
-li a[href~="admin.php?page=dailys"]:hover,
-li a[href~="admin.php?page=bb_submit"]:hover {
-	text-shadow: 3px 3px 5px #000!important;
-}
-
-/*    --------- FORM ELEMENTS ----------*/
-h1#title{
-	font-family: 'Reenie Beanie','IM Fell DW Pica SC';
-	font-weight:bold;
-	font-size:3.7em;
-	letter-spacing: 2px;
-	text-indent:75;
-	color:orange;
-	text-shadow: 3px 3px 5px #666;
-	margin:4px 4px 4px 4px;
-	padding:2px 2px 2px 2px;
-}
-
-.bb-admin-menu #bb-admin-form{
-	background:black;
-	color:white;
-	padding:20px;
-	clear:left;
-}
-#bb-new-set .ui-icon {
-float:left;
-}
-div#slider{
-	margin:0.5em 0.5em 0.2em 0.5em;
-}
-input.ui-icon{
-	clear:none;
-	display:inline;
-}
-.bb-main {
-	min-width:900px;
-}
 /**********  PROGRAM SHEET  */
+.bb-program {
+	font-size:1em;
+}
 .bb-program#bb_program_table{
     border-collapse: collapse;
+	border:none;
 }
-
 .bb-program#bb_program_table tr td{
+	border:none;
+	font-size:0.84em;
 	white-space:nowrap;
 	padding:1em 1em 0.5em 1em;
 	margin:1em 1em 1em 1em;
 }
 .bb-program#bb_program_table tr.header th{
+	border:none;
+	font-size:1em;
 	vertical-align:top;
 }
 .bb-program#bb_program_table tr.month-divider th{
@@ -75,17 +31,15 @@ input.ui-icon{
 	font-size:2em;
 	padding:1em 3em 1em 2em;
 	margin:0 3em 0 0 ;
-	border:1px;
 }
 
 .bb-program#bb_program_table tr.week-divider hr{
 	border:0;
 	border-top: 1px dotted orange;
 	height: 0;
-	background: black;
-	opacity:0.1;
+	opacity:0.21;
 }
-.bb-program#bb_program_table td.discipline{
+.bb-program#bb_program_table td.sport{
 	text-transform:capitalize;
 	font-weight:bold;
 }
@@ -99,7 +53,7 @@ input.ui-icon{
 }
 .bb-program#bb_program_table tr.set-row-incomplete:hover {
 	color:white;
-	background:hsla(110,70%,40%,.85);
+	background:#00D91B;
 }
 .bb-program#bb_program_table tr.set-row-incomplete td:hover {
     cursor: pointer;
@@ -109,12 +63,77 @@ input.ui-icon{
 .bb-program#bb_program_table td.duration,
 .bb-program#bb_program_table td.setting,
 .bb-program#bb_program_table td.status {
-	font-size:1.1em;
 	text-align:center;
 }
 .bb-program#bb_program_table td.rest-day {
-	color:hsla(0,0%,0%,.2);
+	color:#444;
 }
+
+/**********  REPORTS TABLE-STYLE  */
+table.boomb-session {
+	border:none!important;
+}
+table.boomb-session * {
+
+}
+table.boomb-session tr.session td,
+table.boomb-session tr.set td {
+	border-collapse: collapse;
+	border:none!important;
+	font-size:1em;	
+	border:none;
+	font-size:0.84em;
+	white-space:nowrap;
+	padding:1em 1em 0.5em 1em;
+	margin:1em 1em 1em 1em;
+}
+table.boomb-session tr.header th {
+	border:none;
+	font-size:1em;
+	vertical-align:top;
+}
+table.boomb-session tr.month-divider th * {
+	font-family:'IM Fell DW Pica SC';
+	text-align:left;
+	font-size:2em;
+	padding:1em 0 1em 0;
+	margin:0 3em 0 0 ;
+}
+table.boomb-session tr.divider th hr {
+	border-top: 1px dotted orange;
+	opacity:0.21;
+}
+table.boomb-session td.sport{
+	text-transform:capitalize;
+	font-weight:bold;
+}
+table.boomb-session td.difficulty,
+table.boomb-session td.status {
+	text-decoration:none;
+	font-weight:bold;
+}
+table.boomb-session td.difficulty,
+table.boomb-session td.distance,
+table.boomb-session td.duration,
+table.boomb-session td.setting,
+table.boomb-session td.status {
+	text-align:center;
+}
+table.boomb-session td.rest-day {
+	color:#444;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /********  REPORTS SHEET   */
@@ -154,7 +173,7 @@ div.pc_distance {
 	text-align:left;
 }
 
-.bb-reports#bb_reports_totals th.discipline{
+.bb-reports#bb_reports_totals th.sport{
 	text-align:left;
 	text-transform:capitalize;
 }
@@ -166,92 +185,46 @@ div.pc_distance {
 /* - - - - REPORTS TABLE - - - -*/
 
 
-table.bb-reports#bb_report_disciplines {
+table.bb-reports#bb_report_sports {
 	width:95%;
 	height:70%;
 }
-table.bb-reports#bb_report_disciplines tr th {
+table.bb-reports#bb_report_sports tr th {
 	font-size:0.8em;
 }
-table.bb-reports#bb_report_disciplines tr td {
+table.bb-reports#bb_report_sports tr td {
 	text-align:center;
 	vertical-align:text-top;
 	white-space:nowrap;
 	padding:1em 1em 1em 0.5em;
 }
-table.bb-reports#bb_report_disciplines tr td.date {
+table.bb-reports#bb_report_sports tr td.date {
 	text-align:left;
 	min-width:12em;
 	white-space:nowrap;
 }
-table.bb-reports#bb_report_disciplines tr td.details {
+table.bb-reports#bb_report_sports tr td.details {
 	text-align:justify;
 	white-space:normal;
 	min-width:40%;
 }
-table.bb-reports#bb_report_disciplines tr td.details a,
-table.bb-reports#bb_report_disciplines tr th a.toggle-all {
+table.bb-reports#bb_report_sports tr td.details a,
+table.bb-reports#bb_report_sports tr th a.toggle-all {
 	cursor: pointer;
 }
-table.bb-reports#bb_report_disciplines tr th a.toggle-all {
+table.bb-reports#bb_report_sports tr th a.toggle-all {
 	cursor: pointer;
 	float:left;
 }
-table.bb-reports#bb_report_disciplines tr td.food {
+table.bb-reports#bb_report_sports tr td.food {
 	padding: 0 1em 0 1em;
 	text-align:left;
 	min-width:8em;
 	white-space:normal;
 }
-table.bb-reports#bb_report_disciplines tr td.discipline {
+table.bb-reports#bb_report_sports tr td.sport {
 	text-align:left;
 }
-
-
-/********  submit SHEET   */
-/* FORM ELEMENTS  */
-.new-effort textarea {
-	width:100%;
-	min-height:8em;
-}
-.new-effort#submit_form_table {
-	width:100%;
-	height:70%;
-}
-.new-effort#submit_form_table tr td {
-	padding:1em .5em .5em .5em;
-
-}
-.new-effort#submit_form_table tr td.col-1 {
-		width:60%;
-}
-/* tabs elements*/
-div#tabs ul li span{
-	float:right;
-}
-
-table.bb-submit#bb_submit_table {
-	width:100%;
-	margin:1em 2em 1em 3em;
-}
-table.bb-submit#bb_submit_table tr td,
-li.ui-state-default {
-	text-align:center;
-	text-transform:capitalize;
-}
-table.bb-submit#bb_submit_table tr td.total {
-	text-align:right;
-}
-table.bb-submit#bb_submit_table tr td.discipline {
-	text-align:left;
-}
-
-/* - - - - TIME UI - - - - - */
-.duration {
-	width:2.5em;
-	margin:1em .33em 1em .33em;
-}
-
 
 /* - - - - - IMAGE MAP - - - - */
 map area:hover {
@@ -294,17 +267,4 @@ table.container tr td {
 .bb-dailys button {
 	margin: 2em;
 }
-
-
-/* - - - EDITOR - - - - - */
-div.editor input {
-	disabled:true;
-}
-div.editor label {
-	float:left;
-}
-
-
-
-
 

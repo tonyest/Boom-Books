@@ -24,7 +24,7 @@ function bb_admin_init_scripts() {
 
 //	wp_enqueue_style('redmond',BB_PLUGIN_URL.'/css/redmond/jquery-ui-1.8.6.custom.css',false,'1.8.6');
 //	wp_enqueue_style('bb-admin-style', BB_PLUGIN_URL.'/css/bb-admin-style.css');
-	wp_enqueue_style('google-fonts','http://fonts.googleapis.com/css?family=Reenie+Beanie|IM+Fell+DW+Pica+SC&subset=latin');
+//	wp_enqueue_style('google-fonts','http://fonts.googleapis.com/css?family=Reenie+Beanie|IM+Fell+DW+Pica+SC&subset=latin');
 }
 function bb_admin_scripts() {
 //	wp_enqueue_script('jquery');
@@ -183,8 +183,6 @@ $labels = array(
 include_once(BB_PLUGIN_DIR.'/bb-widget.class.php');
 add_action('widgets_init', create_function('', 'return register_widget("bboom_widget");'));
 add_action('widgets_init', create_function('', 'return register_widget("boomb_stats_widget");'));
-
-
 /*
  *		Boom books init
  *		
@@ -205,9 +203,9 @@ function bb_init() {
 			wp_register_script('jqueryUI-spinner-min',BB_PLUGIN_URL.'/js/ui.spinner.min.js','jqueryUI');
 
 			wp_enqueue_style('redmond',BB_PLUGIN_URL.'/css/redmond/jquery-ui-1.8.6.custom.css',false,'1.8.6');
-		//	wp_enqueue_style('bb-admin-style', BB_PLUGIN_URL.'/css/bb-admin-style.css');
-			wp_enqueue_style('bb-admin-style', BB_PLUGIN_URL.'/css/bb-widget.css');	
-			wp_enqueue_style('google-fonts','http://fonts.googleapis.com/css?family=Reenie+Beanie|IM+Fell+DW+Pica+SC&subset=latin');
+			wp_enqueue_style('bb-admin-style', BB_PLUGIN_URL.'/css/bb-admin-style.css');
+			wp_enqueue_style('bb-widget', BB_PLUGIN_URL.'/css/bb-widget.css');	
+			//wp_enqueue_style('google-fonts','http://fonts.googleapis.com/css?family=Reenie+Beanie|IM+Fell+DW+Pica+SC&subset=latin');
 			wp_enqueue_script('jquery');
 			wp_enqueue_script('jqueryUI');
 
@@ -215,7 +213,11 @@ function bb_init() {
 //			wp_enqueue_script('jqueryUI-datepicker');
 			wp_enqueue_script('jqueryUI-spinner');
 			wp_enqueue_script('jqueryUI-spinner-min');
+			
+			wp_enqueue_script('boomb-widget', BB_PLUGIN_URL.'/js/boomb-widget.js');
 	}	
+
+
 }
 add_action( 'init' , 'bb_init' );
 ?>

@@ -6,7 +6,7 @@ if($_POST['log']=='submit'){
 	$date = strtotime($_POST['date']);
 	$date = date_i18n('Y-m-d H:i:s',$date,false);
 	$category = $_POST['category'];
-		$discipline = 'cycling';
+		$sport = 'cycle';
 		$setting = $_POST['category'];	
 		$difficulty = $_POST['difficulty'];
 		$duration = sec_to_time($_POST['duration']*60);
@@ -14,7 +14,7 @@ if($_POST['log']=='submit'){
 		$details = $_POST['details'];
 bb_insert_set($date,$category);
 $setID = $wpdb->insert_id;
-bb_insert_effort($setID,$discipline,$setting,$difficulty,$duration,$distance,$details);
+bb_insert_effort($setID,$sport,$setting,$difficulty,$duration,$distance,$details);
 // $wpdb->print_error();
 
 }

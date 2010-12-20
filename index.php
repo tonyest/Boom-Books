@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Boom Books
+Plugin Name: Boom Books (Alpha)
 Plugin URI: http://
 Description: Boom Books is an interface for exercise logging and reporting
 Version: 0.1
@@ -17,15 +17,16 @@ if( !defined( 'WP_ADMIN_URL' ) )
 
 register_activation_hook(__FILE__,'bb_dbinstall');
 //register_deactivation_hook(__FILE__,'bb_cleanup');
+include_once(BB_PLUGIN_DIR.'/includes/boomb-db-install.php');
 include_once(BB_PLUGIN_DIR.'/includes/functions.php');
-include_once(BB_PLUGIN_DIR.'/bb-load.php');
-include_once(BB_PLUGIN_DIR.'/bb-templatetags.php');
-
+include_once(BB_PLUGIN_DIR.'/includes/boomb-ajax.php');
+include_once(BB_PLUGIN_DIR.'/includes/boomb-query-functions.php');
+include_once(BB_PLUGIN_DIR.'/boomb-load.php');
+include_once(BB_PLUGIN_DIR.'/boomb-templatetags.php');
 /*
- *BOOM BOOKS custom type
- *install the first boombooks custom page
+ *	BOOM BOOKS page
+ *	install the first boombooks custom page
  *
- *				Create Boom Book Page
  */
 register_activation_hook( __FILE__, 'install_boombook' );
 function install_boombook(){
@@ -42,8 +43,6 @@ function install_boombook(){
 		);
 		return $post_id = wp_insert_post($post_data, false);
 }
-
-
 /*
  * Table constructor for Boom Books tables
  * inserts tables into wpdb for use in Boom Books loggin/queries
@@ -53,119 +52,21 @@ function install_boombook(){
 	global $bb_db_version;
 	$bb_db_version = "0.1";
 function bb_dbinstall () {
-	global $wpdb;
 	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-	/* Boom Books 'bb_sets' table constructor */
-	$table_name = $wpdb->prefix . "bb_sets";
-	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
-
-		$sql = "CREATE TABLE " . $table_name . " (
-			setID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			userID bigint(20) UNSIGNED NOT NULL,
-			start_date date NOT NULL,
-			start_time time NOT NULL,
-			category tinytext NOT NULL,			
-			status tinytext NOT NULL,
-			name tinytext,
-			description text,
-			parent bigint(20) UNSIGNED,
-			PRIMARY KEY  (setID),
-			FOREIGN KEY (userID) REFERENCES wp_users(ID)
-		);";
-
-      dbDelta($sql);
-   }
-	/* Boom Books 'bb_efforts' table constructor */
-	$table_name = $wpdb->prefix . "bb_efforts";
-	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
-
-		$sql = "CREATE TABLE " . $table_name . " (
-			effortID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			setID bigint(20) UNSIGNED NOT NULL,
-			sport tinytext NOT NULL,
-			setting tinytext NOT NULL,			
-			difficulty tinyint(2) UNSIGNED DEFAULT '0' NOT NULL,
-			duration time NOT NULL,
-			distance float(6,2) UNSIGNED DEFAULT '0' NOT NULL,			
-			details text NOT NULL,
-			max_hr int UNSIGNED,
-			avg_hr int UNSIGNED,
-			water float(4,2) UNSIGNED DEFAULT '0' NOT NULL,
-			PRIMARY KEY  (effortID,setID),
-			FOREIGN KEY (setID) REFERENCES wp_bb_sets(setID)
-		);";
-      dbDelta($sql);
-   }
-	/* Boom Books 'bb_stretches' table constructor */
-	$table_name = $wpdb->prefix . "bb_stretches";
-	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
-
-		$sql = "CREATE TABLE " . $table_name . " (
-			stretchesID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			setID bigint(20) UNSIGNED NOT NULL,
-			muscle tinytext NOT NULL,
-			duration time NOT NULL,		
-			PRIMARY KEY  (stretchesID,setID),
-			FOREIGN KEY (setID) REFERENCES wp_bb_sets(setID)
-		);";
-      dbDelta($sql);
-   }
-	/* Boom Books 'bb_daily' table constructor */
-	$table_name = $wpdb->prefix . "bb_dailys";
-	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
-
-		$sql = "CREATE TABLE " . $table_name . " (
-			dailyID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			userID bigint(20) UNSIGNED NOT NULL,
-			date date NOT NULL,
-			RHR tinyint(3) UNSIGNED DEFAULT '0' NOT NULL,
-			water tinyint(3) UNSIGNED DEFAULT '0' NOT NULL,
-			sleep tinyint(3) UNSIGNED DEFAULT '0' NOT NULL,		
-			PRIMARY KEY  (dailyID,userID,date),
-			FOREIGN KEY (userID) REFERENCES wp_users(ID)
-		);";
-      dbDelta($sql);
-   }
-	/* Boom Books 'bb_journal' table constructor */
-	$table_name = $wpdb->prefix . "bb_journals";
-	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
-
-		$sql = "CREATE TABLE " . $table_name . " (
-			journalID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			setID bigint(20) UNSIGNED,
-			effortID biging(20) UNSIGNED,
-			dailyID bigint(20) UNSIGNED NOT NULL,
-			meal tinytext NOT NULL,
-			time time NOT NULL,
-			foods text NOT NULL,	
-			PRIMARY KEY  (journalID,dailyID),
-			FOREIGN KEY (dailyID) REFERENCES wp_bb_dailys(dailyID)
-		);";
-      dbDelta($sql);
-   }
-	if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
-
-		$sql = "CREATE TABLE " . $table_name . " (
-			setID bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			userID bigint(20) UNSIGNED NOT NULL,
-			start_date date NOT NULL,
-			start_time time NOT NULL,
-			category tinytext NOT NULL,			
-			status tinytext NOT NULL,
-			parent bigint(20) UNSIGNED,
-			PRIMARY KEY  (setID),
-			FOREIGN KEY (userID) REFERENCES wp_users(ID)
-		);";
-
-      dbDelta($sql);
-   }
+	install_boomb_sessions();
+	install_boomb_sets();
+	install_boomb_stretches();
+	install_boomb_dailys();
+	install_boomb_journals();
+	
+	install_boomb_programs();
+	install_boomb_program_sessions();
+	install_boomb_program_sets();
+	
 	add_option("bb_db_version", $bb_db_version);
 }
-
 /*
  *cleanup functions for de-activation (currently not working)
- *
- *
  *
 */
 function bb_cleanup(){
@@ -179,4 +80,5 @@ function bb_cleanup(){
 		}
 	}
 }
+
 ?>

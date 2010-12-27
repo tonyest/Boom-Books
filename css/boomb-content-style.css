@@ -1,0 +1,24 @@
+table.program tr.row td a:link,
+table.program tr.row td a:hover,
+table.program tr.row td a:visited {
+	text-decoration:none;
+}
+table.program tr.row:hover {
+	color:white;
+	background:#00D91B;
+    cursor: pointer;
+}
+#content table {
+	width:97%;
+	-moz-border-radius: 7px;
+	border-radius:  7px;
+	border:none;
+	
+}
+#content table.program tr td,
+#content table.program tr td {
+	border:none;
+}
+table.program tr th {
+	border-bottom:1px solid #444444;
+}

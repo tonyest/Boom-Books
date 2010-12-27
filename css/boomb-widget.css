@@ -1,0 +1,80 @@
+/*
+ *
+ *	BOOM-BOOKS WIDGET SYLING CSS
+ *
+ */
+#bb_editorxx {
+	border-top:2px dashed red;
+}
+#bb_editorxx * {
+	border-right:2px dashed red;
+		border-left:2px dashed red;
+}
+.bb-widget {
+	padding:0.7em;
+}
+.bb-widget .editor ul li{
+	list-style:none;
+}
+.bb-widget .session {
+	margin:0 0 1em 0;
+}
+.bb-widget .datepicker {
+	display:inline;
+	float:right;
+}
+.bb-widget .editor input ,
+.bb-widget .editor select, 
+.bb-widget .editor textarea {
+	float:right;
+	margin:0.14em;
+}
+.bb-widget .editor ul.editor li {
+	width:99%;
+	float:right;
+	text-align:left;
+	margin:0.21;
+	padding:0.14em;
+}
+.bb-widget .editor textarea {
+	width:98%;
+}
+.bb-widget .editor label {
+	vertical-align:text-bottom;
+	margin:0.14em;
+}
+.bb-widget .editor div.sets {
+	border:2px dashed blue;	
+}
+.bb-widget a.toggle-editor,
+.bb-widget a.delete  {
+	cursor: pointer;	
+}
+.bb-widget a.add-set  {
+	cursor: crosshair;	
+}
+.bb-widget button,
+.bb-widget a.logout,
+.bb-widget a.delete,
+.editor button {
+	float:right;
+}
+.bb-widget button {
+	margin:0.5em 1em 2em 1em;
+}
+#boomb {
+	float:left;
+	width:280px;
+	clear:none;
+	margin:0 0 0 0;
+	display:inline;
+}
+/* - - - Reformat css for custom boomb dual sidebar - - - - */
+div#main,
+div#wrapper {
+	width:1500px;
+}
+#content {
+	margin:0 280px 0 280px;
+}
+

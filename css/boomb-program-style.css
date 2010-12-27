@@ -1,0 +1,315 @@
+/*
+ *	Custom stylesheet for boom-books admin bachelor pad
+ *
+ *
+ */
+/*----------MENU ELEMENTS---------*/
+li a[href~="admin.php?page=boom_books"],
+li a[href~="admin.php?page=bb_reports"],
+li a[href~="admin.php?page=bb_submit"],
+li a[href~="admin.php?page=bb_author"],
+li a[href~="admin.php?page=dailys"] {
+	/*	color:#21759B!important; */
+	font-family: 'Reenie Beanie','IM Fell DW Pica SC'!important;
+	font-size:1.6em!important;
+	white-space:nowrap;
+	min-width:5em!important;
+}
+
+li a[href~="admin.php?page=boom_books"]:hover,
+li a[href~="admin.php?page=bb_program"]:hover,
+li a[href~="admin.php?page=bb_reports"]:hover,
+li a[href~="admin.php?page=dailys"]:hover,
+li a[href~="admin.php?page=bb_submit"]:hover {
+	text-shadow: 3px 3px 5px #000!important;
+}
+
+/*    --------- FORM ELEMENTS ----------*/
+h1#title{
+	font-family: 'Reenie Beanie','IM Fell DW Pica SC';
+	font-weight:bold;
+	font-size:3.7em;
+	letter-spacing: 2px;
+	text-indent:75;
+	color:orange;
+	text-shadow: 3px 3px 5px #666;
+	margin:4px 4px 4px 4px;
+	padding:2px 2px 2px 2px;
+}
+
+.bb-admin-menu #bb-admin-form{
+	background:black;
+	color:white;
+	padding:20px;
+	clear:left;
+}
+#bb-new-set .ui-icon {
+float:left;
+}
+div#slider{
+	margin:0.5em 0.5em 0.2em 0.5em;
+}
+input.ui-icon{
+	clear:none;
+	display:inline;
+}
+.bb-main {
+	min-width:900px;
+}
+/**********  PROGRAM SHEET  */
+.bb-program {
+	font-size:0.5em;
+}
+.bb-program#bb_program_table{
+    border-collapse: collapse;
+}
+
+.bb-program#bb_program_table tr td{
+	font-size:0.7em;
+	white-space:nowrap;
+	padding:1em 1em 0.5em 1em;
+	margin:1em 1em 1em 1em;
+}
+.bb-program#bb_program_table tr.header th{
+	font-size:1em;
+	vertical-align:top;
+}
+.bb-program#bb_program_table tr.month-divider th{
+	font-family:'IM Fell DW Pica SC';
+	text-align:left;
+	font-size:2em;
+	padding:1em 3em 1em 2em;
+	margin:0 3em 0 0 ;
+	border:1px;
+}
+
+.bb-program#bb_program_table tr.week-divider hr{
+	border:0;
+	border-top: 1px dotted orange;
+	height: 0;
+	background: black;
+	opacity:0.1;
+}
+.bb-program#bb_program_table td.sport{
+	text-transform:capitalize;
+	font-weight:bold;
+}
+.bb-program#bb_program_table td.difficulty,
+.bb-program#bb_program_table td.status,
+.bb-program#bb_program_table tr td.set-date a:link,
+.bb-program#bb_program_table tr td.set-date a:hover,
+.bb-program#bb_program_table tr td.set-date a:visited {
+	text-decoration:none;
+	font-weight:bold;
+}
+.bb-program#bb_program_table tr.set-row-incomplete:hover {
+	color:white;
+	background:hsla(110,70%,40%,.85);
+}
+.bb-program#bb_program_table tr.set-row-incomplete td:hover {
+    cursor: pointer;
+}
+.bb-program#bb_program_table td.difficulty,
+.bb-program#bb_program_table td.distance,
+.bb-program#bb_program_table td.duration,
+.bb-program#bb_program_table td.setting,
+.bb-program#bb_program_table td.status {
+	font-size:1.1em;
+	text-align:center;
+}
+.bb-program#bb_program_table td.rest-day {
+	color:hsla(0,0%,0%,.2);
+}
+
+
+/********  REPORTS SHEET   */
+.bb-reports#bb_reports_table {
+	border:;
+	border-style:solid;
+	border-color:white;
+	width:100%;
+	margin:10px 10px 10px 10px;
+}
+.bb-reports#bb_reports_totals {
+	white-space:nowrap;
+	min-width:60%;
+}
+table.bb-reports#bb_reports_totals tr.sub-header-row *{
+	padding: 1em 1em 2em 1em;
+}
+.bb-reports#bb_reports_totals th {
+	white-space:nowrap;
+	width:30%;
+}
+.bb-reports#bb_reports_totals tr td {
+	text-align:center;
+/*	white-space:nowrap;
+border:2px;
+border-style:solid;
+border-color:white;*/
+	padding:5px 10px 5px 10px;
+	margin:10px 10px 10px 10px;
+}
+
+div.pc_duration,
+div.pc_distance {
+	color:blue;
+}
+.bb-reports#bb_reports_totals th.bb-reports-table-header {
+	text-align:left;
+}
+
+.bb-reports#bb_reports_totals th.sport{
+	text-align:left;
+	text-transform:capitalize;
+}
+
+.bb-reports#bb_reports_totals th.table-totals{
+	text-align:left;
+	padding-left:3em;
+}
+/* - - - - REPORTS TABLE - - - -*/
+
+
+table.bb-reports#bb_report_sports {
+	width:95%;
+	height:70%;
+}
+table.bb-reports#bb_report_sports tr th {
+	font-size:0.8em;
+}
+table.bb-reports#bb_report_sports tr td {
+	text-align:center;
+	vertical-align:text-top;
+	white-space:nowrap;
+	padding:1em 1em 1em 0.5em;
+}
+table.bb-reports#bb_report_sports tr td.date {
+	text-align:left;
+	min-width:12em;
+	white-space:nowrap;
+}
+table.bb-reports#bb_report_sports tr td.details {
+	text-align:justify;
+	white-space:normal;
+	min-width:40%;
+}
+table.bb-reports#bb_report_sports tr td.details a,
+table.bb-reports#bb_report_sports tr th a.toggle-all {
+	cursor: pointer;
+}
+table.bb-reports#bb_report_sports tr th a.toggle-all {
+	cursor: pointer;
+	float:left;
+}
+table.bb-reports#bb_report_sports tr td.food {
+	padding: 0 1em 0 1em;
+	text-align:left;
+	min-width:8em;
+	white-space:normal;
+}
+table.bb-reports#bb_report_sports tr td.sport {
+	text-align:left;
+}
+
+
+/********  submit SHEET   */
+/* FORM ELEMENTS  */
+.new-effort textarea {
+	width:100%;
+	min-height:8em;
+}
+.new-effort#submit_form_table {
+	width:100%;
+	height:70%;
+}
+.new-effort#submit_form_table tr td {
+	padding:1em .5em .5em .5em;
+
+}
+.new-effort#submit_form_table tr td.col-1 {
+		width:60%;
+}
+/* tabs elements*/
+div#tabs ul li span{
+	float:right;
+}
+
+table.bb-submit#bb_submit_table {
+	width:100%;
+	margin:1em 2em 1em 3em;
+}
+table.bb-submit#bb_submit_table tr td,
+li.ui-state-default {
+	text-align:center;
+	text-transform:capitalize;
+}
+table.bb-submit#bb_submit_table tr td.total {
+	text-align:right;
+}
+table.bb-submit#bb_submit_table tr td.sport {
+	text-align:left;
+}
+
+/* - - - - TIME UI - - - - - */
+.duration {
+	width:2.5em;
+	margin:1em .33em 1em .33em;
+}
+
+
+/* - - - - - IMAGE MAP - - - - */
+map area:hover {
+	cursor: pointer;	
+}
+ul.stretches {
+	position:absolute;
+	top:49px;
+	margin:1em;
+	padding:1em;
+	clear:both;
+	min-width:70px;
+}
+table.stretches{
+	width:100%;
+}
+table.stretches tr td {
+	width:50%;
+	border: 1px solid #999;
+}
+
+/* - - - - - - Dailys - - - -- */
+/*textarea.consumed {
+	min-width:35em;
+}*/
+
+table.stretches tr td.input {
+	min-width:49%;
+}
+ul.stretches {
+	height:100%;
+}
+
+table.container{
+	width:99%;
+}
+table.container tr td {
+		height:100%;
+}
+.bb-dailys button {
+	margin: 2em;
+}
+
+
+/* - - - EDITOR - - - - - */
+div.editor input {
+	disabled:true;
+}
+div.editor label {
+	float:left;
+}
+
+
+
+
+

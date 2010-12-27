@@ -15,14 +15,15 @@ if( !defined( 'BB_PLUGIN_URL' ) )
 if( !defined( 'WP_ADMIN_URL' ) )
 	define( 'WP_ADMIN_URL', get_bloginfo( 'wpurl' ) . '/wp-admin/admin.php');
 
-register_activation_hook(__FILE__,'bb_dbinstall');
+register_activation_hook(__FILE__,'boomb_dbinstall');
 //register_deactivation_hook(__FILE__,'bb_cleanup');
+include_once(BB_PLUGIN_DIR.'/boomb-load.php');
 include_once(BB_PLUGIN_DIR.'/includes/boomb-db-install.php');
 include_once(BB_PLUGIN_DIR.'/includes/functions.php');
 include_once(BB_PLUGIN_DIR.'/includes/boomb-ajax.php');
 include_once(BB_PLUGIN_DIR.'/includes/boomb-query-functions.php');
-include_once(BB_PLUGIN_DIR.'/boomb-load.php');
 include_once(BB_PLUGIN_DIR.'/boomb-templatetags.php');
+include_once(BB_PLUGIN_DIR.'/includes/boomb-queries.php');
 /*
  *	BOOM BOOKS page
  *	install the first boombooks custom page
@@ -30,7 +31,6 @@ include_once(BB_PLUGIN_DIR.'/boomb-templatetags.php');
  */
 register_activation_hook( __FILE__, 'install_boombook' );
 function install_boombook(){
-	error_log('make page');
 	global $wpdb,$current_user;	
 		$post_data = array(
 			'post_status' => 'publish', 
@@ -41,7 +41,11 @@ function install_boombook(){
 			'post_excerpt' => 'Boom Books is the conduit between member and coach',
 			'post_title' => __('Boom Books' , 'bb')
 		);
-		return $post_id = wp_insert_post($post_data, false);
+		if ( !get_option( 'boomb_index_page') ) :
+			$post_id = wp_insert_post( $post_data , false );
+			add_option( 'boomb_index_page' , $post_id );
+		endif;
+		return $post_id;
 }
 /*
  * Table constructor for Boom Books tables
@@ -51,7 +55,7 @@ function install_boombook(){
  */
 	global $bb_db_version;
 	$bb_db_version = "0.1";
-function bb_dbinstall () {
+function boomb_dbinstall () {
 	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 	install_boomb_sessions();
 	install_boomb_sets();
@@ -63,13 +67,19 @@ function bb_dbinstall () {
 	install_boomb_program_sessions();
 	install_boomb_program_sets();
 	
+	install_boomb_user_sessions();
+	install_boomb_user_sets();
+	
 	add_option("bb_db_version", $bb_db_version);
+	//add roles
+	 add_role( 'boomb_coach', 'BoomB Coach', array( 'boomb_edit_session' => true , 'boomb_delete_session' => true , 'boomb_edit_program' => true , 'boomb_delete_program' => true , 'boomb_manage_users' => true ) );
+	add_role( 'boomb_member', 'Boomb Member', array( 'boomb_edit_session' , 'boomb_delete_session' ) );
 }
 /*
  *cleanup functions for de-activation (currently not working)
  *
 */
-function bb_cleanup(){
+function boomb_cleanup(){
 	global $wpdb;
 	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 	$args = array('wp_bb_sets','wp_bb_efforts','wp_bb_dailys','wp_bb_stretches','wp_bb_journal');
@@ -80,5 +90,3 @@ function bb_cleanup(){
 		}
 	}
 }
-
-?>

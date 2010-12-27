@@ -1,4 +1,5 @@
 jQuery(document).ready( function($) {	
+	$('.userselect').hide();
 	$('button#issue_select').click(function (event) {
 	$('.program').detach();
 		event.preventDefault;

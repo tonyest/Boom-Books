@@ -633,9 +633,7 @@ function get_author( $programID ) {
 	?>
 	<script>
 		jQuery(document).ready( function($) {
-			console.log('content aok');
 			$('.userselect').hide();
-			console.log('content hidden');
 		});
 	</script>
 	<?php
